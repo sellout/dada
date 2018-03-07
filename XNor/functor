@@ -1,0 +1,18 @@
+  λ(a : Type)
+→ (   { map =
+            λ(b : Type)
+          → λ(c : Type)
+          → λ(f : b → c)
+          → λ(fa : ./type  a b)
+          →     let X = constructors (./type  a b)
+            
+            in  merge
+                { Both    =
+                      λ(xn : { head : a, tail : b })
+                    → X.Both { head = xn.head, tail = f xn.tail }
+                , Neither = X.Neither
+                }
+                fa
+      }
+    : ../functor  (./type  a)
+  )

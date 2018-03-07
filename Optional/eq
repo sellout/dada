@@ -1,0 +1,14 @@
+  λ(a : Type)
+→ λ(eq : ../eq  a)
+→ (   { eq =
+            λ(x : Optional a)
+          → λ(y : Optional a)
+          → Optional/fold
+            a
+            x
+            Bool
+            (λ(xx : a) → Optional/fold a y Bool (eq.eq xx) False)
+            (Optional/fold a y Bool (λ(yy : a) → False) True)
+      }
+    : ../eq  (Optional a)
+  )

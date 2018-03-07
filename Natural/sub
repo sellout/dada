@@ -1,0 +1,22 @@
+  λ(a : Natural)
+→ λ(b : Natural)
+→     let Rec = ./recursive 
+  
+  in  Rec.cata
+      (Optional Natural)
+      (   λ(fa : Optional (Optional Natural))
+        → Optional/fold
+          (Optional Natural)
+          fa
+          (Optional Natural)
+          (   λ(fa : Optional Natural)
+            → Optional/fold
+              Natural
+              fa
+              (Optional Natural)
+              Rec.project
+              ([] : Optional Natural)
+          )
+          ([ a ] : Optional Natural)
+      )
+      b

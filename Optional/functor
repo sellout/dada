@@ -1,0 +1,13 @@
+  { map =
+        λ(a : Type)
+      → λ(b : Type)
+      → λ(f : a → b)
+      → λ(fa : Optional a)
+      → Optional/fold
+        a
+        fa
+        (Optional b)
+        (λ(x : a) → [ f x ] : Optional b)
+        ([] : Optional b)
+  }
+: ../functor  Optional

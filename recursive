@@ -1,0 +1,6 @@
+  λ(t : Type)
+→ λ(base : Type → Type)
+→ { cata    : ∀(a : Type) → ∀(algebra : base a → a) → ∀(fixed : t) → a
+  , embed   : ∀(fa : base t) → t
+  , project : ∀(fixed : t) → base t
+  }

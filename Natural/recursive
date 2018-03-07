@@ -1,0 +1,20 @@
+    let cata =
+            λ(a : Type)
+          → λ(alg : ../algebra  Optional a)
+          → λ(fa : Natural)
+          → Natural/fold
+            fa
+            a
+            (λ(x : a) → alg ([ x ] : Optional a))
+            (alg ([] : Optional a))
+
+in  let embed =
+            λ(fa : Optional Natural)
+          → Optional/fold Natural fa Natural (λ(a : Natural) → a + +1) +0
+
+in  (   { cata    = cata
+        , embed   = embed
+        , project = ../lambek  Natural Optional cata embed ../Optional/functor
+        }
+      : ../recursive  Natural Optional
+    )

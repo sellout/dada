@@ -1,0 +1,1 @@
+{ eq = \(x : Bool) -> \(y : Bool) -> x == y } : ../eq Bool

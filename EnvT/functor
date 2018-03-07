@@ -1,0 +1,12 @@
+  λ(a : Type)
+→ λ(f : Type → Type)
+→ λ(functor : ../functor  f)
+→ (   { map =
+            λ(b : Type)
+          → λ(c : Type)
+          → λ(g : b → c)
+          → λ(q : ./type  a f b)
+          → q ⫽ { lower = functor.map b c g q.lower }
+      }
+    : ../functor  (./type  a f)
+  )
