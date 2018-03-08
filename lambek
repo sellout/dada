@@ -3,5 +3,4 @@
 → λ(cata : ∀(a : Type) → ∀(algebra : base a → a) → ∀(fixed : t) → a)
 → λ(embed : ∀(fa : base t) → t)
 → λ(functor : ./functor  base)
-→ λ(fixed : t)
-→ cata (base t) (functor.map (base t) t embed) fixed
+→ cata (base t) (functor.map (base t) t embed)
