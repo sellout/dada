@@ -1,0 +1,22 @@
+  λ(a : Type)
+→     let LRec = ./recursive  a
+  
+  in  let NRec = ../Natural/recursive 
+  
+  in  NRec.cata
+      (List a → Optional a)
+      (   λ(i : Optional (List a → Optional a))
+        → Optional/fold
+          (List a → Optional a)
+          i
+          (List a → Optional a)
+          (   λ(f : List a → Optional a)
+            → λ(aa : List a)
+            → merge
+              { Both    = λ(b : { head : a, tail : List a }) → f b.tail
+              , Neither = λ(n : {}) → [] : Optional a
+              }
+              (LRec.project aa)
+          )
+          List/head
+      )
