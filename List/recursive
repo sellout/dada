@@ -1,39 +1,33 @@
     let XNor = ../XNor/type
 
-in  let cata =
-            λ(a : Type)
-          → λ(b : Type)
-          → λ(alg : ../algebra  (XNor a) b)
-          → λ(fa : List a)
-          → List/fold
-            a
-            fa
-            b
-            (   λ(x : a)
-              → λ(y : b)
-              → alg < Both = { head = x, tail = y } | Neither : {} >
-            )
-            (alg < Neither = {=} | Both : { head : a, tail : b } >)
-
-in  let embed =
-            λ(a : Type)
-          → λ(fa : XNor a (List a))
-          → merge
-            { Both    = λ(q : { head : a, tail : List a }) → [ q.head ] # q.tail
-            , Neither = λ(q : {}) → [] : List a
-            }
-            fa
-
 in    λ(a : Type)
-    → (   { cata    = cata a
-          , embed   = embed a
-          , project =
-              ../lambek
-              (List a)
-              (XNor a)
-              (cata a)
-              (embed a)
-              (../XNor/functor  a)
-          }
-        : ../recursive  (List a) (XNor a)
-      )
+    →     let cata =
+                  λ(b : Type)
+                → λ(alg : ../algebra  (XNor a) b)
+                → λ(fa : List a)
+                → List/fold
+                  a
+                  fa
+                  b
+                  (   λ(x : a)
+                    → λ(y : b)
+                    → alg < Both = { head = x, tail = y } | Neither : {} >
+                  )
+                  (alg < Neither = {=} | Both : { head : a, tail : b } >)
+
+      in  let embed =
+                  λ(fa : XNor a (List a))
+                → merge
+                  { Both    =
+                      λ(q : { head : a, tail : List a }) → [ q.head ] # q.tail
+                  , Neither = λ(q : {}) → [] : List a
+                  }
+                  fa
+
+      in  (   { cata    = cata
+              , embed   = embed
+              , project =
+                  ../lambek  (List a) (XNor a) cata embed (../XNor/functor  a)
+              }
+            : ../recursive  (List a) (XNor a)
+          )
