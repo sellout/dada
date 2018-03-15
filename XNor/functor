@@ -1,6 +1,6 @@
     let XNor = ./type
 
-in  let Functor = ../../dhall-bhat/Functor/Type
+in  let Functor = ../functor
 
 in    λ(a : Type)
     → (   { map =
