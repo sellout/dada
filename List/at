@@ -1,8 +1,8 @@
   λ(a : Type)
 →     let LRec = ./recursive  a
-  
-  in  let NRec = ../Natural/recursive 
-  
+
+  in  let NRec = ../Natural/recursive
+
   in  NRec.cata
       (List a → Optional a)
       (   λ(i : Optional (List a → Optional a))
@@ -18,5 +18,5 @@
               }
               (LRec.project aa)
           )
-          List/head
+          (List/head a)
       )
