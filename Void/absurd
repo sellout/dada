@@ -1,0 +1,2 @@
+  λ(a : Type)
+→ (../Mu/recursive  ../Identity/type  ../Identity/functor ).cata a (../id  a)

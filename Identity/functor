@@ -1,0 +1,1 @@
+{ map = λ(a : Type) → λ(b : Type) → λ(f : a → b) → f } : ../functor  ./type 
