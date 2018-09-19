@@ -1,0 +1,27 @@
+    let Bifunctor =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/master/Bifunctor/Type
+
+in  let Bifunctor/first =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/master/Bifunctor/first
+
+in  let Bifunctor/second =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/master/Bifunctor/second
+
+in  let Functor =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/master/Functor/Type
+
+in    λ(f : Type → Type → Type)
+    → λ(functor : Bifunctor f)
+    →   { map =
+              λ(a : Type)
+            → λ(b : Type)
+            → λ(fn : a → b)
+            → (./recursive (f a)).cata
+              (./Type (f b))
+              (   λ(fa : f a (./Type (f b)))
+                → ( ./steppable (f b) { map = Bifunctor/second f functor b }
+                  ).embed
+                  (Bifunctor/first f functor a (./Type (f b)) b fn fa)
+              )
+        }
+      : Functor (λ(a : Type) → ./Type (f a))
