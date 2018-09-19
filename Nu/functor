@@ -1,14 +1,14 @@
     let Bifunctor =
-          https://raw.githubusercontent.com/FormationAI/dhall-bhat/master/Bifunctor/Type
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Bifunctor/Type
 
 in  let Bifunctor/first =
-          https://raw.githubusercontent.com/FormationAI/dhall-bhat/master/Bifunctor/first
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Bifunctor/first
 
 in  let Bifunctor/second =
-          https://raw.githubusercontent.com/FormationAI/dhall-bhat/master/Bifunctor/second
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Bifunctor/second
 
 in  let Functor =
-          https://raw.githubusercontent.com/FormationAI/dhall-bhat/master/Functor/Type
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Functor/Type
 
 in    λ(f : Type → Type → Type)
     → λ(functor : Bifunctor f)

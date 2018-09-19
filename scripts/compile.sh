@@ -8,6 +8,6 @@ do
   echo $f;
   # Compile the Dhall file
   TMPFILE=$(mktemp --tmpdir dhall-bhat.XXXXXXXXXX)
-  ../dhall-haskell/.stack-work/dist/x86_64-osx-nix/Cabal-2.2.0.1/build/Dhall/dhall <<< $f >/dev/null 2>$TMPFILE || (cat $TMPFILE && exit 1)
+  dhall <<< $f >/dev/null 2>$TMPFILE || (cat $TMPFILE && exit 1)
   rm $TMPFILE
 done

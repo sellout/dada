@@ -1,1 +1,1 @@
-\(a : Type) -> { eq : a -> a -> Bool }
+λ(a : Type) → { eq : a → a → Bool }

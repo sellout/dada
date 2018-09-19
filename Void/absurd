@@ -1,4 +1,8 @@
-    let Identity =
+    let Function/category =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Function/category
+
+in  let Identity =
           https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Identity/Type
 
-in  λ(a : Type) → (./../Mu/recursive Identity).cata a (./../id a)
+in    λ(a : Type)
+    → (./../Mu/recursive Identity).cata a (Function/category.identity a)

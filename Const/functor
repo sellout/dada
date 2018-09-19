@@ -1,6 +1,14 @@
-    let Functor =
+    let Function/category =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Function/category
+
+in  let Functor =
           https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Functor/Type
 
 in    λ(a : Type)
-    →   { map = λ(b : Type) → λ(c : Type) → λ(_ : b → c) → ./../id a }
+    →   { map =
+              λ(b : Type)
+            → λ(c : Type)
+            → λ(_ : b → c)
+            → Function/category.identity a
+        }
       : Functor (./Type a)

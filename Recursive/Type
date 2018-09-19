@@ -1,4 +1,3 @@
   λ(t : Type)
 → λ(base : Type → Type)
-→ { cata    : ∀(a : Type) → ∀(algebra : base a → a) → ∀(fixed : t) → a
-  }
+→ { cata : ∀(a : Type) → ∀(algebra : base a → a) → ∀(fixed : t) → a }

@@ -5,8 +5,6 @@ IFS=$'\n\t'
 project=$(basename -- $(realpath "./"))
 type_pattern='Type$'
 
-DHALL=../dhall-haskell/.stack-work/dist/x86_64-osx-nix/Cabal-2.2.0.1/build/Dhall/dhall
-
 echo '<html>'
 echo '<head>'
 echo '<title>'$project'</title>'
@@ -20,7 +18,7 @@ do
     if [ -d "$f" ]; then
         echo '<h2 style="background-color: #bbb; width: 100%">'$f'</h2>'
     else
-        type=$($DHALL resolve <<< $f | $DHALL type)
+        type=$(dhall resolve <<< $f | dhall type)
         if [[ $type =~ $type_pattern ]] ; then
             echo "<h3>"$(basename -- "$f")" (type)</h3>";
             echo '<dl>'
@@ -28,7 +26,7 @@ do
             echo "$type"
             echo '</pre></dd>'
             echo '<dt>type</dt><dd><pre>'
-            $DHALL <<< $f
+            dhall <<< $f
             echo '</pre></dd>'
             echo '</dl>'
         else
