@@ -1,1 +1,1 @@
-λ(a : Type) → λ(b : Type) → a
+λ(a : Type) → λ(_ : Type) → a

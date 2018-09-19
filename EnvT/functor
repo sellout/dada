@@ -1,12 +1,14 @@
-  λ(a : Type)
-→ λ(f : Type → Type)
-→ λ(functor : ../functor  f)
-→ (   { map =
-            λ(b : Type)
-          → λ(c : Type)
-          → λ(g : b → c)
-          → λ(q : ./type  a f b)
-          → q ⫽ { lower = functor.map b c g q.lower }
-      }
-    : ../functor  (./type  a f)
-  )
+    let Functor =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Functor/Type
+
+in    λ(a : Type)
+    → λ(f : Type → Type)
+    → λ(functor : Functor f)
+    →   { map =
+              λ(b : Type)
+            → λ(c : Type)
+            → λ(g : b → c)
+            → λ(q : ./type a f b)
+            → q ⫽ { lower = functor.map b c g q.lower }
+        }
+      : Functor (./type a f)

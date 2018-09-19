@@ -1,4 +1,1 @@
-  λ(t : Type)
-→ (   { cata = ../apply  t, embed = ../id  t, project = ../id  t }
-    : ../recursive  t (./type  t)
-  )
+λ(t : Type) → { cata = ./../apply t } : ./../Recursive/Type t (./Type t)

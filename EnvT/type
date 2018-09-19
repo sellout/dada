@@ -1,1 +1,3 @@
+{- Pattern functor for interior-valued trees.
+-}
 λ(a : Type) → λ(f : Type → Type) → λ(b : Type) → { ask : a, lower : f b }

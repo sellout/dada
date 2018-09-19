@@ -1,0 +1,2 @@
+  λ(t : Type)
+→ { embed = ./../id t, project = ./../id t } : ./../Steppable/Type t (./Type t)

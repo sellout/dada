@@ -1,0 +1,15 @@
+--     let Eq = ./../Eq/Type
+
+-- in    λ(t : Type)
+--     → λ(f : Type → Type)
+--     → λ(steppable : ./../Steppable/Type t f)
+--     → λ(eq : ∀(a : Type) → Eq a → Eq (f a))
+--     →   { eq =
+--               λ(x : t)
+--             → λ(y : t)
+--             → (eq t (q t f rec eq)).eq
+--               (steppable.project x)
+--               (steppable.project y)
+--         }
+--       : Eq t
+<>

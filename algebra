@@ -1,1 +1,1 @@
-λ(f : Type → Type) → λ(a : Type) → ∀(fa : f a) → a
+λ(f : Type → Type) → λ(a : Type) → f a → a

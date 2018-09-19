@@ -1,10 +1,12 @@
-    let Rec = ./recursive 
+    let Natural/recursive = ./recursive
+
+in  let Natural/steppable = ./steppable
 
 in    λ(a : Natural)
     → λ(b : Natural)
     → Optional/fold
       Natural
-      ( Rec.cata
+      ( Natural/recursive.cata
         (Optional Natural)
         (   λ(x : Optional (Optional Natural))
           → Optional/fold
@@ -16,13 +18,13 @@ in    λ(a : Natural)
                 Natural
                 y
                 (Optional Natural)
-                Rec.project
+                Natural/steppable.project
                 ([] : Optional Natural)
             )
-            (Rec.project b)
+            (Natural/steppable.project b)
         )
         a
       )
       Bool
-      (λ(x : Natural) → True)
+      (λ(_ : Natural) → True)
       False

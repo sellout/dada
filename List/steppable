@@ -1,0 +1,24 @@
+    let XNor = ./../XNor/Type
+
+in    λ(a : Type)
+    →     let embed =
+                  λ(fa : XNor a (List a))
+                → merge
+                  { Both =
+                      λ(q : { head : a, tail : List a }) → [ q.head ] # q.tail
+                  , Neither =
+                      λ(q : {}) → [] : List a
+                  }
+                  fa
+      
+      in    { embed =
+                embed
+            , project =
+                ./../lambek
+                (List a)
+                (XNor a)
+                (./recursive a).cata
+                embed
+                (./../XNor/functor a)
+            }
+          : ./../Steppable/Type (List a) (XNor a)

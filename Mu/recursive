@@ -1,20 +1,8 @@
   λ(f : Type → Type)
-→ λ(functor : ../functor  f)
-→     let cata =
-              λ(a : Type)
-            → λ(algebra : f a → a)
-            → λ(fixed : ./type  f)
-            → fixed a algebra
-  
-  in  let embed =
-              λ(fm : f (./type  f))
-            → λ(a : Type)
-            → λ(alg : f a → a)
-            → alg (functor.map (./type  f) a (cata a alg) fm)
-  
-  in  (   { cata    = cata
-          , embed   = embed
-          , project = ../lambek  (./type  f) f cata embed functor
-          }
-        : ../recursive  (./type  f) f
-      )
+→   { cata =
+          λ(a : Type)
+        → λ(algebra : f a → a)
+        → λ(fixed : ./Type f)
+        → fixed a algebra
+    }
+  : ./../Recursive/Type (./Type f) f

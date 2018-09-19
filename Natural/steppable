@@ -1,0 +1,15 @@
+    let embed =
+            λ(fa : Optional Natural)
+          → Optional/fold Natural fa Natural (λ(a : Natural) → a + 1) 0
+
+in    { embed =
+          embed
+      , project =
+          ./../lambek
+          Natural
+          Optional
+          (./recursive).cata
+          embed
+          ./../Optional/functor
+      }
+    : ./../Steppable/Type Natural Optional
