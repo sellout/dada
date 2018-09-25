@@ -3,7 +3,9 @@
 in    λ(a : Type)
     →   { cata =
               λ(b : Type)
-            → λ(alg : ./../algebra (XNor a) b)
+            → λ ( alg
+                : ./../algebra Type ./../../dhall-bhat/Function/Type (XNor a) b
+                )
             → λ(fa : List a)
             → List/fold
               a
@@ -15,4 +17,8 @@ in    λ(a : Type)
               )
               (alg < Neither = {=} | Both : { head : a, tail : b } >)
         }
-      : ./../Recursive/Type (List a) (XNor a)
+      : ./../Recursive/Type
+        Type
+        ./../../dhall-bhat/Function/Type
+        (List a)
+        (XNor a)

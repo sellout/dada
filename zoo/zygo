@@ -1,0 +1,33 @@
+    let Set = ./../../dhall-bhat/Function/Type
+
+in  let Set/category = ./../../dhall-bhat/Function/category
+
+in  let Endofunctor = ./../../dhall-bhat/Functor/Endo/Type Type Set
+
+in  let Tuple = ./../../dhall-bhat/Tuple/Type
+
+in  let Tuple/comonad = ./../../dhall-bhat/Tuple/comonad
+
+in  let Tuple/endofunctor =
+          ./../../dhall-bhat/Tuple/functor/endo/star
+          (./../../dhall-bhat/Identity/Type Type)
+          (./../../dhall-bhat/Identity/functor/endo Type Set)
+
+in    λ(t : Type)
+    → λ(base : Type → Type)
+    → λ(functor : Endofunctor base)
+    → λ(recursive : ./../Recursive/Type Type Set t base)
+    → λ(b : Type)
+    → λ(helperAlgebra : base b → b)
+    → ./../Recursive/gcata
+      Type
+      Set
+      Set/category
+      t
+      base
+      functor
+      recursive
+      (Tuple b)
+      (Tuple/comonad b)
+      (Tuple/endofunctor b)
+      (./../DistributiveLaw/tuple base functor b helperAlgebra)

@@ -1,5 +1,4 @@
-    let Functor =
-          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Functor/Type
+    let Functor = ./../../dhall-bhat/Functor/Endo/Set
 
 in    λ(f : Type → Type)
     → λ(functor : Functor f)
@@ -25,8 +24,19 @@ in    λ(f : Type → Type)
                   )
       
       in    { embed =
-                ./../colambek (./Type f) f functor (./corecursive f).ana project
+                ./../colambek
+                Type
+                ./../../dhall-bhat/Function/Type
+                (./Type f)
+                f
+                functor
+                (./corecursive f).ana
+                project
             , project =
                 project
             }
-          : ./../Steppable/Type (./Type f) f
+          : ./../Steppable/Type
+            Type
+            ./../../dhall-bhat/Function/Type
+            (./Type f)
+            f

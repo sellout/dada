@@ -1,0 +1,44 @@
+  λ(object : Kind)
+→ λ(arrow : object → object → Type)
+→ λ(category : ./../../dhall-bhat/Category/Type object arrow)
+→     let Monad = ./../../dhall-bhat/Monad/Type object arrow
+  
+  in  let Starfunctor = ./../../dhall-bhat/Functor/Endo/Star/Type object arrow
+  
+  in    λ(t : object)
+      → λ(base : object → object)
+      → λ(recursive : ./Type object arrow t base)
+      → λ(m : object → object)
+      → λ(monad : Monad m)
+      → λ(functor : Starfunctor m base)
+      → λ(a : object)
+      → λ(algebra : arrow (base a) (m a))
+      →     let Star/category =
+                  ./../../dhall-bhat/Star/category
+                  object
+                  arrow
+                  ( ./../../dhall-bhat/Category/extractSemigroupoid
+                    object
+                    arrow
+                    category
+                  )
+                  m
+                  monad
+        
+        in  recursive.cata
+            (m a)
+            ( Star/category.compose
+              (base (m a))
+              (base a)
+              a
+              algebra
+              ( ./../../dhall-bhat/Functor/Endo/Star/sequence
+                object
+                arrow
+                category
+                m
+                base
+                functor
+                a
+              )
+            )

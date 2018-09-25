@@ -1,0 +1,6 @@
+    let Function/category = ./../../../dhall-bhat/Function/category
+
+in  let Identity = ./../../../dhall-bhat/Identity/Type Type
+
+in    λ(a : Type)
+    → (./../../Mu/recursive Identity).cata a (Function/category.identity a)

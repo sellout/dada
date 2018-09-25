@@ -1,9 +1,10 @@
-    let Functor =
-          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Functor/Type
+    let Functor = ./../dhall-bhat/Functor/Endo/Type
 
-in    λ(t : Type)
-    → λ(base : Type → Type)
-    → λ(functor : Functor base)
-    → λ(ana : ∀(a : Type) → (a → base a) → a → t)
-    → λ(project : t → base t)
+in    λ(object : Kind)
+    → λ(arrow : object → object → Type)
+    → λ(t : object)
+    → λ(base : object → object)
+    → λ(functor : Functor object arrow base)
+    → λ(ana : ∀(a : object) → arrow a (base a) → arrow a t)
+    → λ(project : arrow t (base t))
     → ana (base t) (functor.map t (base t) project)

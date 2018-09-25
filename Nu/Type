@@ -1,4 +1,6 @@
-{- Represents a potentially-infinite structure lazily.
+{- Represents a potentially-infinite computation lazily. This can’t be
+   eliminated within Dhall, but a runtime can easily interpret this, then run it
+   to completion.
 -}
   λ(f : Type → Type)
 → ∀(r : Type) → (∀(a : Type) → { coalgebra : a → f a, seed : a } → r) → r

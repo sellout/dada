@@ -1,0 +1,35 @@
+{- FIXME: `functor2` should be replaced by `comonad.{map}`
+-}
+  λ(object : Kind)
+→ λ(arrow : object → object → Type)
+→ λ(category : ./../../dhall-bhat/Category/Type object arrow)
+→     let Comonad = ./../../dhall-bhat/Comonad/Type object arrow
+  
+  in  let Endofunctor = ./../../dhall-bhat/Functor/Endo/Type object arrow
+  
+  in  let Identity = ./../../dhall-bhat/Identity/Type object
+  
+  in  let Identity/monad =
+            ./../../dhall-bhat/Identity/monad object arrow category
+  
+  in    λ(t : object)
+      → λ(base : object → object)
+      → λ(functor : Endofunctor base)
+      → λ(recursive : ./Type object arrow t base)
+      → λ(w : object → object)
+      → λ(comonad : Comonad w)
+      → λ(functor2 : Endofunctor w)
+      → ./gcataM
+        object
+        arrow
+        category
+        t
+        base
+        functor
+        recursive
+        Identity
+        Identity/monad
+        functor
+        w
+        comonad
+        functor2

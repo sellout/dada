@@ -1,0 +1,27 @@
+--     let Either =
+--           https://raw.githubusercontent.com/FormationAI/dhall-bhat/master/Either/Type
+
+-- in  let Either/functor =
+--           https://raw.githubusercontent.com/FormationAI/dhall-bhat/master/Either/functor
+
+-- in    λ(a : Type)
+--     → λ(p : ./Type a)
+--     → λ(steppable : ./../Nu/steppable (Either a))
+--     → λ(n : Natural)
+--     →     let E = constructors (Either a (./Type a))
+      
+--       in  ./../cataM
+--           Natural
+--           Optional
+--           ./../Natural/recursive
+--           (Either a)
+--           (   λ(opt : Optional (./Type a))
+--             → Optional/fold
+--               (./Type a)
+--               opt
+--               (Either a (./Type a))
+--               (E.Right p)
+--               steppable.project
+--           )
+--           n
+<>

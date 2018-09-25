@@ -1,1 +1,7 @@
-λ(t : Type) → { cata = ./../apply t } : ./../Recursive/Type t (./Type t)
+  λ(object : Kind)
+→ λ(arrow : object → object → Type)
+→     let Const = ./../../dhall-bhat/Const/Type
+  
+  in    λ(t : object)
+      →   { cata = λ(a : object) → λ(f : arrow t a) → f }
+        : ./../Recursive/Type object arrow t (Const object object t)

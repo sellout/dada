@@ -1,0 +1,21 @@
+    let Functor = ./../../dhall-bhat/Functor/Endo/Set
+
+in  let Either = ./../../dhall-bhat/Either/Type
+
+in    λ(f : Type → Type)
+    → λ(functor : Functor f)
+    → λ(a : Type)
+    → λ(coalgebra : a → f a)
+    →   (   λ(b : Type)
+          →     let E = constructors (Either a b)
+            
+            in    λ(mfa : Either a (f b))
+                → merge
+                  { Left =
+                      λ(x : a) → functor.map a (Either a b) E.Left (coalgebra x)
+                  , Right =
+                      functor.map b (Either a b) E.Right
+                  }
+                  mfa
+        )
+      : ./Type Type ./../../dhall-bhat/Function/Type (Either a) f

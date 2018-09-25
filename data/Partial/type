@@ -1,0 +1,7 @@
+{- Represents a potentially-infinite computation. It can’t necessarily be fully-
+   evaluated in Dhall, but should be able to be interpreted into another
+   language and run to completion (or the end of the Universe).
+-}
+    let Either = ./../../../dhall-bhat/Either/Type
+
+in  λ(a : Type) → ./../../Nu/Type (Either a)

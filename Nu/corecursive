@@ -7,4 +7,4 @@
         → λ(fn : ∀(b : Type) → { coalgebra : b → f b, seed : b } → r)
         → fn a { coalgebra = coalg, seed = s }
     }
-  : ./../Corecursive/Type (./Type f) f
+  : ./../Corecursive/Type Type ./../../dhall-bhat/Function/Type (./Type f) f

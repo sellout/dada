@@ -1,10 +1,10 @@
-    let Function/category =
-          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Function/category
-
-in    λ(t : Type)
-    →   { embed =
-            Function/category.identity t
-        , project =
-            Function/category.identity t
-        }
-      : ./../Steppable/Type t (./Type t)
+  λ(object : Kind)
+→ λ(arrow : object → object → Type)
+→ λ(category : ./../../dhall-bhat/Category/Type object arrow)
+→ λ(t : object)
+→   { embed = category.identity t, project = category.identity t }
+  : ./../Steppable/Type
+    object
+    arrow
+    t
+    (./../../dhall-bhat/Const/Type object object t)

@@ -1,0 +1,3 @@
+    let Tuple = ./../../../dhall-bhat/Tuple/Type
+
+in  λ(a : Type) → ./../../Nu/Type (Tuple a)

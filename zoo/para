@@ -1,0 +1,10 @@
+    let Set = ./../../dhall-bhat/Function/Type
+
+in  let Endofunctor = ./../../dhall-bhat/Functor/Endo/Type Type Set
+
+in    λ(t : Type)
+    → λ(base : Type → Type)
+    → λ(functor : Endofunctor base)
+    → λ(steppable : ./../Steppable/Type Type Set t base)
+    → λ(recursive : ./../Recursive/Type Type Set t base)
+    → ./zygo t base functor recursive t steppable.embed

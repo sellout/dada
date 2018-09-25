@@ -1,0 +1,55 @@
+{- All folds are equally powerful, but this one gives us the easiest way to
+   define the others.
+-}
+    let Comonad = ./../../dhall-bhat/Comonad/Type
+
+in  let Monad = ./../../dhall-bhat/Monad/Type
+
+in  let Starfunctor = ./../../dhall-bhat/Functor/Endo/Star/Type
+
+in    λ(object : Kind)
+    → λ(arrow : object → object → Type)
+    → λ(category : ./../../dhall-bhat/Category/Type object arrow)
+    → λ(t : object)
+    → λ(base : object → object)
+    → λ(functor2 : ./../../dhall-bhat/Functor/Endo/Type object arrow base)
+    → λ(recursive : ./Type object arrow t base)
+    → λ(m : object → object)
+    → λ(monad : Monad object arrow m)
+    → λ(functor : Starfunctor object arrow m base)
+    → λ(w : object → object)
+    → λ(comonad : Comonad object arrow w)
+    → λ(traverse : Starfunctor object arrow m w)
+    → λ(k : ./../DistributiveLaw/Type object arrow base w)
+    → λ(a : object)
+    → λ(algebra : arrow (base (w a)) (m a))
+    → category.compose
+      t
+      (m (w a))
+      (m a)
+      (monad.map (w a) a (comonad.identity a))
+      ( ./cataM
+        object
+        arrow
+        category
+        t
+        base
+        recursive
+        m
+        monad
+        functor
+        (w a)
+        ( category.compose
+          (base (w a))
+          (w (base (w a)))
+          (m (w a))
+          (traverse.map (base (w a)) a algebra)
+          ( category.compose
+            (base (w a))
+            (base (w (w a)))
+            (w (base (w a)))
+            (k (w a))
+            (functor2.map (w a) (w (w a)) (comonad.op a))
+          )
+        )
+      )

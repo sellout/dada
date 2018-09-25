@@ -1,35 +1,47 @@
     let Bifunctor =
-          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Bifunctor/Type
+          ./../../dhall-bhat/Functor/Bifunctor/Type
+          Type
+          ./../../dhall-bhat/Function/Type
+          Type
+          ./../../dhall-bhat/Function/Type
+          Type
+          ./../../dhall-bhat/Function/Type
 
-in  let Bifunctor/first =
-          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Bifunctor/first
+in  let Bifunctor/terms =
+          ./../../dhall-bhat/Functor/Bifunctor/terms.dhall
+          Type
+          ./../../dhall-bhat/Function/Type
+          ./../../dhall-bhat/Function/category
+          Type
+          ./../../dhall-bhat/Function/Type
+          ./../../dhall-bhat/Function/category
+          Type
+          ./../../dhall-bhat/Function/Type
 
-in  let Bifunctor/second =
-          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Bifunctor/second
-
-in  let Functor =
-          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Functor/Type
+in  let Functor = ./../../dhall-bhat/Functor/Endo/Set
 
 in    λ(f : Type → Type → Type)
-    → λ(functor : Bifunctor f)
-    →   { map =
-              λ(a : Type)
-            → λ(b : Type)
-            → λ(fn : a → b)
-            → (./corecursive (f b)).ana
-              (./Type (f a))
-              (   λ(t : ./Type (f a))
-                → Bifunctor/first
-                  f
-                  functor
-                  a
+    → λ(functor : Bifunctor (λ(p : { _1 : Type, _2 : Type }) → f p._1 p._2))
+    →     let bi =
+                Bifunctor/terms
+                (λ(p : { _1 : Type, _2 : Type }) → f p._1 p._2)
+                functor
+      
+      in    { map =
+                  λ(a : Type)
+                → λ(b : Type)
+                → λ(fn : a → b)
+                → (./corecursive (f b)).ana
                   (./Type (f a))
-                  b
-                  fn
-                  ( ( ./steppable (f a) { map = Bifunctor/second f functor a }
-                    ).project
-                    t
+                  (   λ(t : ./Type (f a))
+                    → bi.first
+                      (./Type (f a))
+                      a
+                      b
+                      fn
+                      ( (./steppable (f a) (bi.extractSecondFunctor a)).project
+                        t
+                      )
                   )
-              )
-        }
-      : Functor (λ(a : Type) → ./Type (f a))
+            }
+          : Functor (λ(a : Type) → ./Type (f a))

@@ -1,5 +1,4 @@
-    let Optional/functor =
-          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Optional/functor
+    let Optional/functor = ./../../dhall-bhat/Optional/functor/endo/set
 
 in  let embed =
             λ(fa : Optional Natural)
@@ -8,6 +7,13 @@ in  let embed =
 in    { embed =
           embed
       , project =
-          ./../lambek Natural Optional (./recursive).cata embed Optional/functor
+          ./../lambek
+          Type
+          ./../../dhall-bhat/Function/Type
+          Natural
+          Optional
+          (./recursive).cata
+          embed
+          Optional/functor
       }
-    : ./../Steppable/Type Natural Optional
+    : ./../Steppable/Type Type ./../../dhall-bhat/Function/Type Natural Optional

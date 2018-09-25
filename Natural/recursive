@@ -1,6 +1,6 @@
   { cata =
         λ(a : Type)
-      → λ(alg : ./../algebra Optional a)
+      → λ(alg : ./../algebra Type ./../../dhall-bhat/Function/Type Optional a)
       → λ(fa : Natural)
       → Natural/fold
         fa
@@ -8,4 +8,4 @@
         (λ(x : a) → alg ([ x ] : Optional a))
         (alg ([] : Optional a))
   }
-: ./../Recursive/Type Natural Optional
+: ./../Recursive/Type Type ./../../dhall-bhat/Function/Type Natural Optional

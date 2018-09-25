@@ -1,23 +1,24 @@
     let XNor = ./type
 
-in  let Functor =
-          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Functor/Type
+in  let Functor = ./../../dhall-bhat/Functor/Pair/Type
 
-in    λ(a : Type)
-    →   { map =
-              λ(b : Type)
-            → λ(c : Type)
-            → λ(f : b → c)
-            → λ(fa : XNor a b)
-            →     let X = constructors (XNor a c)
-              
-              in  merge
-                  { Both =
-                        λ(xn : { head : a, tail : b })
-                      → X.Both { head = xn.head, tail = f xn.tail }
-                  , Neither =
-                      X.Neither
-                  }
-                  fa
-        }
-      : Functor (XNor a)
+in    { map =
+            λ(b : { _1 : Type, _2 : Type })
+          → λ(c : { _1 : Type, _2 : Type })
+          → λ(f : { _1 : b._1 → c._1, _2 : b._2 → c._2 })
+          → λ(fa : XNor b._1 b._2)
+          →     let X = constructors (XNor c._1 c._2)
+            
+            in  merge
+                { Both =
+                      λ(xn : { head : b._1, tail : b._2 })
+                    → X.Both { head = f._1 xn.head, tail = f._2 xn.tail }
+                , Neither =
+                    X.Neither
+                }
+                fa
+      }
+    : Functor
+      Type
+      ./../../dhall-bhat/Function/Type
+      (λ(f : { _1 : Type, _2 : Type }) → XNor f._1 f._2)

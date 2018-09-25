@@ -15,10 +15,16 @@ in    λ(a : Type)
                 embed
             , project =
                 ./../lambek
+                Type
+                ./../../dhall-bhat/Function/Type
                 (List a)
                 (XNor a)
                 (./recursive a).cata
                 embed
-                (./../XNor/functor a)
+                ((./../XNor/terms.dhall).extractSecondFunctor a)
             }
-          : ./../Steppable/Type (List a) (XNor a)
+          : ./../Steppable/Type
+            Type
+            ./../../dhall-bhat/Function/Type
+            (List a)
+            (XNor a)

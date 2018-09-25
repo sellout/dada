@@ -1,0 +1,1 @@
+λ(a : Type) → ./../../Nu/Type (./../../XNor/Type a)
