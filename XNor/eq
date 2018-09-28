@@ -1,31 +1,33 @@
-  λ(a : Type)
-→ λ(ea : ./../Eq/Type a)
-→ λ(b : Type)
-→ λ(eb : ./../Eq/Type b)
-→   { eq =
-          λ(x : ./type a b)
-        → λ(y : ./type a b)
-        → merge
-          { Both =
-                λ(xx : { head : a, tail : b })
-              → merge
-                { Both =
-                      λ(yy : { head : a, tail : b })
-                    → ea.eq xx.head yy.head && eb.eq xx.tail yy.tail
-                , Neither =
-                    λ(q : {}) → False
-                }
-                y
-          , Neither =
-                λ(q : {})
-              → merge
-                { Both =
-                    λ(yy : { head : a, tail : b }) → False
-                , Neither =
-                    λ(q : {}) → True
-                }
-                y
-          }
-          x
-    }
-  : ./../Eq/Type (./type a b)
+    let XNor = ./Type
+
+in    λ(a : Type)
+    → λ(ea : ./../Eq/Type a)
+    → λ(b : Type)
+    → λ(eb : ./../Eq/Type b)
+    →   { eq =
+              λ(x : XNor a b)
+            → λ(y : XNor a b)
+            → merge
+              { Both =
+                    λ(xx : { head : a, tail : b })
+                  → merge
+                    { Both =
+                          λ(yy : { head : a, tail : b })
+                        → ea.eq xx.head yy.head && eb.eq xx.tail yy.tail
+                    , Neither =
+                        λ(q : {}) → False
+                    }
+                    y
+              , Neither =
+                    λ(q : {})
+                  → merge
+                    { Both =
+                        λ(yy : { head : a, tail : b }) → False
+                    , Neither =
+                        λ(q : {}) → True
+                    }
+                    y
+              }
+              x
+        }
+      : ./../Eq/Type (XNor a b)
