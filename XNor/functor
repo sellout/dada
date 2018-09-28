@@ -1,4 +1,4 @@
-    let XNor = ./type
+    let XNor = ./Type
 
 in  let Functor =
           https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Functor/Type
