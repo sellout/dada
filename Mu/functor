@@ -1,24 +1,50 @@
---     let Bifunctor = ./../dhall-bhat/Functor/Bifunctor/Type
-
--- in  let Bifunctor/first = ./../dhall-bhat/Functor/Bifunctor/terms.dhallfirst
-
--- in  let Bifunctor/second = ./../dhall-bhat/Functor/Bifunctor/second
-
--- in  let Functor = ./../dhall-bhat/Functor/Type
-
--- in    λ(f : Type → Type → Type)
---     → λ(functor : Bifunctor f)
---     →   { map =
---               λ(a : Type)
---             → λ(b : Type)
---             → λ(fn : a → b)
---             → (./recursive (f a)).cata
---               (./Type (f b))
---               (   λ(fa : f a (./Type (f b)))
---                 → ( ./steppable (f b) { map = Bifunctor/second f functor b }
---                   ).embed
---                   (Bifunctor/first f functor a (./Type (f b)) b fn fa)
---               )
---         }
---       : Functor (λ(a : Type) → ./Type (f a))
-<>
+  λ(object : Kind)
+→ λ(arrow : object → object → Type)
+→ λ(category : ./../../dhall-bhat/Category/Type object arrow)
+→     let Set = ./../../dhall-bhat/Function/Type
+  
+  in  let Set/category = ./../../dhall-bhat/Function/category
+  
+  in  let Bifunctor =
+            ./../../dhall-bhat/Functor/Bifunctor/Type
+            object
+            arrow
+            Type
+            Set
+            Type
+            Set
+  
+  in  let Functor = ./../../dhall-bhat/Functor/Type object arrow Type Set
+  
+  in    λ(f : object → Type → Type)
+      →     let tupledF = λ(p : { _1 : object, _2 : Type }) → f p._1 p._2
+        
+        in    λ(functor : Bifunctor tupledF)
+            →     let Bifunctor/terms =
+                        ./../../dhall-bhat/Functor/Bifunctor/terms.dhall
+                        object
+                        arrow
+                        category
+                        Type
+                        Set
+                        Set/category
+                        Type
+                        Set
+                        tupledF
+                        functor
+              
+              in    { map =
+                          λ(a : object)
+                        → λ(b : object)
+                        → λ(fn : arrow a b)
+                        → (./recursive (f a)).cata
+                          (./Type (f b))
+                          (   λ(fa : f a (./Type (f b)))
+                            → ( ./steppable
+                                (f b)
+                                (Bifunctor/terms.extractSecondFunctor b)
+                              ).embed
+                              (Bifunctor/terms.first (./Type (f b)) a b fn fa)
+                          )
+                    }
+                  : Functor (λ(a : object) → ./Type (f a))
