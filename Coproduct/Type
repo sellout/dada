@@ -1,0 +1,7 @@
+  λ(object : Kind)
+→     let Either = ./../../dhall-bhat/Either/Type
+  
+  in    λ(f : object → Type)
+      → λ(g : object → Type)
+      → λ(a : object)
+      → Either (f a) (g a)

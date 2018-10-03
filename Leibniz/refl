@@ -1,0 +1,7 @@
+  λ(cObject : Kind)
+→ λ(dObject : Kind)
+→ λ(dArrow : dObject → dObject → Type)
+→ λ(dCategory : ./../../dhall-bhat/Category/Type dObject dArrow)
+→ λ(a : cObject)
+→   { subst = λ(f : cObject → dObject) → dCategory.identity (f a) }
+  : ./Type cObject dObject dArrow a a

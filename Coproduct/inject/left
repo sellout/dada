@@ -1,0 +1,19 @@
+  λ(object : Kind)
+→     let Coproduct = ./../../Coproduct/Type object
+  
+  in    λ(f : object → Type)
+      → λ(g : object → Type)
+      →   { inject =
+              λ(a : object) → λ(fa : f a) → < Left = fa | Right : g a >
+          , project =
+                λ(a : object)
+              → λ(co : Coproduct f g a)
+              → merge
+                { Left =
+                    λ(fa : f a) → [ fa ] : Optional (f a)
+                , Right =
+                    λ(ga : g a) → [] : Optional (f a)
+                }
+                co
+          }
+        : ./../../Inject/Type object f (Coproduct f g)

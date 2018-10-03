@@ -1,0 +1,8 @@
+  λ(object : Kind)
+→ λ(f : object → Type)
+→   { inject =
+        λ(a : object) → λ(fa : f a) → fa
+    , project =
+        λ(a : object) → λ(fa : f a) → [ fa ] : Optional (f a)
+    }
+  : ./../Inject/type object f f

@@ -1,0 +1,8 @@
+  λ(object : Kind)
+→ λ(f : object → Type)
+→ λ(g : object → Type)
+→ { inject :
+      ∀(a : object) → f a → g a
+  , project :
+      ∀(a : object) → g a → Optional (f a)
+  }
