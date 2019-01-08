@@ -23,33 +23,55 @@ in    λ(object : Kind)
     → λ(k : ./../DistributiveLaw/Type object arrow base w)
     → λ(a : object)
     → λ(algebra : arrow (base (w a)) (m a))
-    → category.compose
+    → category.op
       t
-      (m (w a))
       (m a)
-      (monad.map (w a) a (comonad.identity a))
-      ( ./cataM
-        object
-        arrow
-        category
-        t
-        base
-        recursive
-        m
-        monad
-        functor
-        (w a)
-        ( category.compose
-          (base (w a))
-          (w (base (w a)))
+      (   λ(r : Type)
+        → λ(arrowsOut : ∀(z : object) → arrow z (m a) → arrow t z → r)
+        → arrowsOut
           (m (w a))
-          (traverse.map (base (w a)) a algebra)
-          ( category.compose
-            (base (w a))
-            (base (w (w a)))
-            (w (base (w a)))
-            (k (w a))
-            (functor2.map (w a) (w (w a)) (comonad.op a))
+          (monad.map (w a) a (comonad.identity a))
+          ( ./cataM
+            object
+            arrow
+            category
+            t
+            base
+            recursive
+            m
+            monad
+            functor
+            (w a)
+            ( category.op
+              (base (w a))
+              (m (w a))
+              (   λ(r : Type)
+                → λ ( arrowsOut
+                    :   ∀(z : object)
+                      → arrow z (m (w a))
+                      → arrow (base (w a)) z
+                      → r
+                    )
+                → arrowsOut
+                  (w (base (w a)))
+                  (traverse.map (base (w a)) a algebra)
+                  ( category.op
+                    (base (w a))
+                    (w (base (w a)))
+                    (   λ(r : Type)
+                      → λ ( arrowsOut
+                          :   ∀(z : object)
+                            → arrow z (w (base (w a)))
+                            → arrow (base (w a)) z
+                            → r
+                          )
+                      → arrowsOut
+                        (base (w (w a)))
+                        (k (w a))
+                        (functor2.map (w a) (w (w a)) (comonad.op a))
+                    )
+                  )
+              )
+            )
           )
-        )
       )

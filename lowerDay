@@ -1,0 +1,52 @@
+{- “Lowers” an algebra over Day convolution to an attribute grammar. It’s often
+    convenient to write an algebra in terms of Day convolution, but generally
+    you’re not folding a fixed-point of `Day`, so this makes the algebra more
+    widely applicable.
+-}
+    let object = Type
+
+in  let cat = ./../dhall-bhat/Category/Monoidal/Set/cartesian
+
+in  let semigroupoid = ./../dhall-bhat/Function/semigroupoid
+
+in  let Day = ./../dhall-bhat/Day/Type object cat cat
+
+in    λ(f : object → object)
+    → λ(t : object)
+    → λ(g : object → object)
+    → λ(steppable : ./Steppable/Type object cat.arrow t g)
+    → λ(a : object)
+    → λ(day : cat.arrow (Day f g a) a)
+    → λ(fta : f (t → a))
+    → semigroupoid.op
+      t
+      a
+      (   λ(r : Type)
+        → λ(arrowsOut : ∀(z : object) → cat.arrow z a → cat.arrow t z → r)
+        → arrowsOut
+          (Day f g a)
+          day
+          ( semigroupoid.op
+            t
+            (Day f g a)
+            (   λ(r : Type)
+              → λ(arrowsOut : ∀(z : object) → (z → Day f g a) → (t → z) → r)
+              → arrowsOut
+                (g t)
+                (   λ(gt : g t)
+                  → λ(r : Type)
+                  → λ ( day
+                      :   ∀(b : { _1 : Type, _2 : Type })
+                        → ({ _1 : b._1, _2 : b._2 } → a)
+                        → { _1 : f b._1, _2 : g b._2 }
+                        → r
+                      )
+                  → day
+                    { _1 = t → a, _2 = t }
+                    (λ(p : { _1 : t → a, _2 : t }) → p._1 p._2)
+                    { _1 = fta, _2 = gt }
+                )
+                steppable.project
+            )
+          )
+      )

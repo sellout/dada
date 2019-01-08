@@ -1,47 +1,67 @@
-    let Bifunctor =
-          ./../../dhall-bhat/Functor/Bifunctor/Type
-          Type
-          ./../../dhall-bhat/Function/Type
-          Type
-          ./../../dhall-bhat/Function/Type
-          Type
-          ./../../dhall-bhat/Function/Type
-
-in  let Bifunctor/terms =
-          ./../../dhall-bhat/Functor/Bifunctor/terms.dhall
-          Type
-          ./../../dhall-bhat/Function/Type
-          ./../../dhall-bhat/Function/category
-          Type
-          ./../../dhall-bhat/Function/Type
-          ./../../dhall-bhat/Function/category
-          Type
-          ./../../dhall-bhat/Function/Type
-
-in  let Functor = ./../../dhall-bhat/Functor/Endo/Set
-
-in    λ(f : Type → Type → Type)
-    → λ(functor : Bifunctor (λ(p : { _1 : Type, _2 : Type }) → f p._1 p._2))
-    →     let bi =
-                Bifunctor/terms
-                (λ(p : { _1 : Type, _2 : Type }) → f p._1 p._2)
-                functor
-      
-      in    { map =
-                  λ(a : Type)
-                → λ(b : Type)
-                → λ(fn : a → b)
-                → (./corecursive (f b)).ana
-                  (./Type (f a))
-                  (   λ(t : ./Type (f a))
-                    → bi.first
-                      (./Type (f a))
-                      a
-                      b
-                      fn
-                      ( (./steppable (f a) (bi.extractSecondFunctor a)).project
-                        t
+  λ(object : Kind)
+→ λ(arrow : object → object → Type)
+→ λ(category : ./../../dhall-bhat/Category/Type object arrow)
+→     let Set = ./../../dhall-bhat/Function/Type
+  
+  in  let Set/category = ./../../dhall-bhat/Function/category
+  
+  in  let Bifunctor =
+            ./../../dhall-bhat/Functor/Bifunctor/Type
+            object
+            Type
+            Type
+            arrow
+            Set
+            Set
+  
+  in  let Bifunctor/terms =
+            ./../../dhall-bhat/Functor/Bifunctor/terms.dhall
+            object
+            arrow
+            category
+            Type
+            Set
+            Set/category
+            Type
+            Set
+  
+  in  let Functor = ./../../dhall-bhat/Functor/Type object Type arrow Set
+  
+  in    λ(f : object → Type → Type)
+      → λ(functor : Bifunctor f)
+      →     let Bifunctor/first = (Bifunctor/terms f functor).first
+        
+        in    { map =
+                    λ(a : object)
+                  → λ(b : object)
+                  → λ(fn : arrow a b)
+                  → λ(nu : ./Type (f a))
+                  → λ(r : Type)
+                  → λ ( unfold
+                      : ∀(z : Type) → { coalgebra : z → f b z, seed : z } → r
                       )
-                  )
-            }
-          : Functor (λ(a : Type) → ./Type (f a))
+                  → nu
+                    r
+                    (   λ(y : Type)
+                      → λ(nub : { coalgebra : y → f a y, seed : y })
+                      → unfold
+                        y
+                        { coalgebra =
+                            Set/category.op
+                            y
+                            (f b y)
+                            (   λ(r : Type)
+                              → λ ( arrowsOut
+                                  : ∀(z : Type) → (z → f b y) → (y → z) → r
+                                  )
+                              → arrowsOut
+                                (f a y)
+                                (Bifunctor/first y a b fn)
+                                nub.coalgebra
+                            )
+                        , seed =
+                            nub.seed
+                        }
+                    )
+              }
+            : Functor (λ(a : object) → ./Type (f a))

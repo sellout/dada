@@ -8,43 +8,45 @@
   in  let Bifunctor =
             ./../../dhall-bhat/Functor/Bifunctor/Type
             object
+            Type
+            Type
             arrow
+            Set
+            Set
+  
+  in  let Bifunctor/terms =
+            ./../../dhall-bhat/Functor/Bifunctor/terms.dhall
+            object
+            arrow
+            category
             Type
             Set
+            Set/category
             Type
             Set
   
-  in  let Functor = ./../../dhall-bhat/Functor/Type object arrow Type Set
+  in  let Functor = ./../../dhall-bhat/Functor/Type object Type arrow Set
   
   in    λ(f : object → Type → Type)
-      →     let tupledF = λ(p : { _1 : object, _2 : Type }) → f p._1 p._2
+      → λ(functor : Bifunctor f)
+      →     let Bifunctor/first = (Bifunctor/terms f functor).first
         
-        in    λ(functor : Bifunctor tupledF)
-            →     let Bifunctor/terms =
-                        ./../../dhall-bhat/Functor/Bifunctor/terms.dhall
-                        object
-                        arrow
-                        category
-                        Type
-                        Set
-                        Set/category
-                        Type
-                        Set
-                        tupledF
-                        functor
-              
-              in    { map =
-                          λ(a : object)
-                        → λ(b : object)
-                        → λ(fn : arrow a b)
-                        → (./recursive (f a)).cata
-                          (./Type (f b))
-                          (   λ(fa : f a (./Type (f b)))
-                            → ( ./steppable
-                                (f b)
-                                (Bifunctor/terms.extractSecondFunctor b)
-                              ).embed
-                              (Bifunctor/terms.first (./Type (f b)) a b fn fa)
-                          )
-                    }
-                  : Functor (λ(a : object) → ./Type (f a))
+        in    { map =
+                    λ(a : object)
+                  → λ(b : object)
+                  → λ(fn : arrow a b)
+                  → λ(ma : ./Type (f a))
+                  → λ(x : Type)
+                  → λ(phi : f b x → x)
+                  → ma
+                    x
+                    ( Set/category.op
+                      (f a x)
+                      x
+                      (   λ(r : Type)
+                        → λ(arrowsOut : ∀(z : Type) → (z → x) → (f a x → z) → r)
+                        → arrowsOut (f b x) phi (Bifunctor/first x a b fn)
+                      )
+                    )
+              }
+            : Functor (λ(a : object) → ./Type (f a))

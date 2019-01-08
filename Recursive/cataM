@@ -25,20 +25,31 @@
                   m
                   monad
         
+        in  let Star/arrow = ./../../dhall-bhat/Star/Type object arrow m
+        
         in  recursive.cata
             (m a)
-            ( Star/category.compose
+            ( Star/category.op
               (base (m a))
-              (base a)
               a
-              algebra
-              ( ./../../dhall-bhat/Functor/Endo/Star/sequence
-                object
-                arrow
-                category
-                m
-                base
-                functor
-                a
+              (   λ(r : Type)
+                → λ ( arrowsOut
+                    :   ∀(z : object)
+                      → Star/arrow z a
+                      → Star/arrow (base (m a)) z
+                      → r
+                    )
+                → arrowsOut
+                  (base a)
+                  algebra
+                  ( ./../../dhall-bhat/Functor/Endo/Star/sequence
+                    object
+                    arrow
+                    category
+                    m
+                    base
+                    functor
+                    a
+                  )
               )
             )

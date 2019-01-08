@@ -1,8 +1,12 @@
-  λ(object : Kind)
-→ λ(f : object → Type)
-→ λ(g : object → Type)
-→ { inject :
-      ∀(a : object) → f a → g a
-  , project :
-      ∀(a : object) → g a → Optional (f a)
-  }
+  λ(cObject : Kind)
+→     let dObject = Type
+  
+  in  let dArrow = ./../../dhall-bhat/Function/Type
+  
+  in    λ(f : cObject → dObject)
+      → λ(g : cObject → dObject)
+      → { inject :
+            ∀(a : cObject) → dArrow (f a) (g a)
+        , project :
+            ∀(a : cObject) → dArrow (g a) (Optional (f a))
+        }

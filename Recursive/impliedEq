@@ -1,15 +1,57 @@
---     let Eq = ./../Eq/Type
+{- If an endofunctor `f` has an `Eq (f {})` instance, then the least fixed-point
+   of that functor has an `Eq` instance.
 
--- in    λ(t : Type)
---     → λ(f : Type → Type)
---     → λ(steppable : ./../Steppable/Type t f)
---     → λ(eq : ∀(a : Type) → Eq a → Eq (f a))
---     →   { eq =
---               λ(x : t)
---             → λ(y : t)
---             → (eq t (q t f rec eq)).eq
---               (steppable.project x)
---               (steppable.project y)
---         }
---       : Eq t
-<>
+   TODO: This needs both `zipWith` and some `Listable.toList` implemented in
+         order to be complete.
+-}
+    let object = Type
+
+in  let arrow = ./../../dhall-bhat/Function/Type
+
+in  let Eq = ./../../dhall-bhat/Eq/Type
+
+in    λ(t : object)
+    → λ(f : object → object)
+    → λ(functor : ./../../dhall-bhat/Functor/Endo/Type object arrow f)
+    → λ(steppable : ./../Steppable/Type object arrow t f)
+    → λ(recursive : ./../Recursive/Type object arrow t f)
+    → λ(eq : Eq (f {}))
+    → λ ( zipWith
+        :   ∀(a : Type)
+          → ∀(b : Type)
+          → ∀(c : Type)
+          → (a → b → c)
+          → List a
+          → List b
+          → List c
+        )
+    → λ(toList : ∀(a : Type) → f a → List a)
+    →     let Functor/void =
+                ./../../dhall-bhat/Functor/void object arrow f functor
+      
+      in    { eq =
+                recursive.cata
+                (t → Bool)
+                (   λ(arg : f (t → Bool))
+                  → λ(b : t)
+                  →     let projected = steppable.project b
+                    
+                    in      eq.eq
+                            (Functor/void (t → Bool) arg)
+                            (Functor/void t projected)
+                        &&  List/fold
+                            Bool
+                            ( zipWith
+                              (t → Bool)
+                              t
+                              Bool
+                              (λ(fn : t → Bool) → λ(meh : t) → fn meh)
+                              (toList (t → Bool) arg)
+                              (toList t projected)
+                            )
+                            Bool
+                            (λ(a : Bool) → λ(b : Bool) → a && b)
+                            True
+                )
+            }
+          : Eq t

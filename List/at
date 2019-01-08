@@ -1,24 +1,38 @@
-  λ(a : Type)
-→     let List/steppable = ./steppable a
-  
-  in  let Natural/recursive = ./../Natural/recursive
-  
-  in  Natural/recursive.cata
-      (List a → Optional a)
-      (   λ(i : Optional (List a → Optional a))
-        → Optional/fold
-          (List a → Optional a)
-          i
-          (List a → Optional a)
-          (   λ(f : List a → Optional a)
-            → λ(aa : List a)
+    let object = Type
+
+in  let cat = ./../../dhall-bhat/Category/Monoidal/Set/cartesian
+
+in  let Day = ./../../dhall-bhat/Day/Type object cat cat
+
+in  let XNor = ./../XNor/Type
+
+in    λ(a : Type)
+    → ./../zoo/cata2
+      Natural
+      Optional
+      ./../Natural/recursive
+      (List a)
+      (XNor a)
+      (./steppable a)
+      (Optional a)
+      (   λ(day : Day Optional (XNor a) (Optional a))
+        → day
+          (Optional a)
+          (   λ(x : { _1 : Type, _2 : Type })
+            → λ(f : { _1 : x._1, _2 : x._2 } → Optional a)
+            → λ(p : { _1 : Optional x._1, _2 : XNor a x._2 })
             → merge
-              { Both =
-                  λ(b : { head : a, tail : List a }) → f b.tail
-              , Neither =
-                  λ(n : {}) → [] : Optional a
+              { Neither =
+                  λ(_ : {}) → None a
+              , Both =
+                    λ(b : { head : a, tail : x._2 })
+                  → Optional/fold
+                    x._1
+                    p._1
+                    (Optional a)
+                    (λ(meh : x._1) → f { _1 = meh, _2 = b.tail })
+                    (Some b.head)
               }
-              (List/steppable.project aa)
+              p._2
           )
-          (List/head a)
       )

@@ -1,0 +1,34 @@
+{- This variant of `cata` takes two structures (only the first of which must be
+  `Recursive`) and folds over them simultaneously, much like a recursive
+  `Applicative.op`.
+-}
+    let object = Type
+
+in  let cat = ./../../dhall-bhat/Category/Monoidal/Set/cartesian
+
+in  let semigroupoid = ./../../dhall-bhat/Function/semigroupoid
+
+in  let Day = ./../../dhall-bhat/Day/Type object cat cat
+
+in    λ(t : object)
+    → λ(f : object → object)
+    → λ(recursive : ./../Recursive/Type object cat.arrow t f)
+    → λ(u : object)
+    → λ(g : object → object)
+    → λ(steppable : ./../Steppable/Type object cat.arrow u g)
+    → λ(a : object)
+    → semigroupoid.op
+      (cat.arrow (Day f g a) a)
+      (cat.arrow t (cat.arrow u a))
+      (   λ(r : Type)
+        → λ ( arrowsOut
+            :   ∀(z : object)
+              → (z → cat.arrow t (cat.arrow u a))
+              → (cat.arrow (Day f g a) a → z)
+              → r
+            )
+        → arrowsOut
+          (cat.arrow (f (cat.arrow u a)) (cat.arrow u a))
+          (recursive.cata (cat.arrow u a))
+          (./../lowerDay f u g steppable a)
+      )

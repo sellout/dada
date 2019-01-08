@@ -1,6 +1,9 @@
-    let XNor = ./type
+    let XNor = ./Type
 
-in  let Functor = ./../../dhall-bhat/Functor/Pair/Type
+in  let Functor =
+          ./../../dhall-bhat/Functor/Pair/Type
+          Type
+          ./../../dhall-bhat/Function/Type
 
 in    { map =
             λ(b : { _1 : Type, _2 : Type })
@@ -18,7 +21,4 @@ in    { map =
                 }
                 fa
       }
-    : Functor
-      Type
-      ./../../dhall-bhat/Function/Type
-      (λ(f : { _1 : Type, _2 : Type }) → XNor f._1 f._2)
+    : Functor XNor

@@ -1,1 +1,0 @@
-{ eq = λ(x : Bool) → λ(y : Bool) → x == y } : ./../Eq/Type Bool

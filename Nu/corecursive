@@ -1,5 +1,5 @@
   λ(f : Type → Type)
-→   { ana =
+→   { cata =
           λ(a : Type)
         → λ(coalg : a → f a)
         → λ(s : a)

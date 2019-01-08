@@ -1,5 +1,4 @@
+{- Corecursion is simply recursion in the opposite category. -}
   λ(object : Kind)
 → λ(arrow : object → object → Type)
-→ λ(t : object)
-→ λ(base : object → object)
-→ { ana : ∀(a : object) → arrow a (base a) → arrow a t }
+→ ./../Recursive/Type object (./../../dhall-bhat/Category/Op/Type object arrow)
