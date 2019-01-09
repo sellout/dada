@@ -1,11 +1,15 @@
-    let Monad =
-          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Monad/Type
+   let Monad =
+         https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Monad/Type
 
-in  let Monad/monad =
-          https://raw.githubusercontent.com/FormationAI/dhall-bhat/6f66fc588c9d49a662794a32b29962341c373eb4/Monad/package.dhall
-    
-in    λ(f : Type → Type)
+in    λ ( f
+        : Type → Type
+        )
     → λ(a : Type)
     → λ(monad : Monad f)
-    → λ(m : ./Type f a)
-    → m (f a) (monad.pure a) ((Monad/monad f monad).join a)
+    → let join =
+            ( https://raw.githubusercontent.com/FormationAI/dhall-bhat/6f66fc588c9d49a662794a32b29962341c373eb4/Monad/package.dhall
+              f
+              monad
+            ).join
+      
+      in  λ(m : ./Type f a) → m (f a) (monad.pure a) (join a)
