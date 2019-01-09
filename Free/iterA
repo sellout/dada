@@ -1,0 +1,10 @@
+   let Applicative =
+         https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Applicative/Type
+
+in    λ(f : Type → Type)
+    → λ(g : Type → Type)
+    → λ(applicative : Applicative g)
+    → λ(a : Type)
+    → λ(phi : f (g a) → g a)
+    → λ(m : ./Type f a)
+    → m (g a) (applicative.pure a) phi

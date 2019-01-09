@@ -1,0 +1,5 @@
+  λ(f : Type → Type)
+→ λ(a : Type)
+→ λ(phi : f a → a)
+→ λ(m : ./Type f a)
+→ m a (λ(x : a) → x) phi
