@@ -1,0 +1,20 @@
+   let Functor =
+         https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Functor/Type
+
+in    λ(f : Type → Type)
+    → λ(functor : Functor f)
+    → λ(c : Type)
+    →   { map =
+              λ(a : Type)
+            → λ(b : Type)
+            → λ(g : a → b)
+            → λ(m : ./Type f c a)
+            → merge
+              { Pure =
+                  λ(x : c) → (./Type f c b).Pure x
+              , Free =
+                  λ(x : f a) → (./Type f c b).Free (functor.map a b g x)
+              }
+              m
+        }
+      : Functor (./Type f c)
