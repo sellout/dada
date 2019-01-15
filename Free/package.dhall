@@ -11,5 +11,9 @@
         ./liftF f
     , foldFree =
         ./foldFree f
+    , toMu =
+        ./toMu f
+    , fromMu =
+        ./fromMu f
     }
   ∧ ./monad f ⫽ ./transformer

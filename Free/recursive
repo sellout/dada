@@ -1,14 +1,13 @@
-   let FreeF = ./../FreeF/Type
-
-in    λ(f : Type → Type)
-    → λ(a : Type)
-    →   { cata =
+  λ(f : Type → Type)
+→ λ(a : Type)
+→     let FreeF = ./../FreeF/Type f a
+  
+  in  let Mu/recursive = ./../Mu/recursive FreeF
+  
+  in    { cata =
               λ(b : Type)
-            → λ(alg : ./../algebra (FreeF f a) b)
+            → λ(alg : ./../algebra FreeF b)
             → λ(fa : ./Type f a)
-            → fa
-              b
-              (λ(x : a) → alg ((FreeF f a b).Pure x))
-              (λ(x : f b) → alg ((FreeF f a b).Free x))
+            → Mu/recursive.cata b alg (./toMu f a fa)
         }
-      : ./../Recursive/Type (./Type f a) (FreeF f a)
+      : ./../Recursive/Type (./Type f a) FreeF

@@ -1,44 +1,40 @@
-let Free = ./Type
-
-let FreeF = ./../FreeF/Type
-
 let Functor =
       https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Functor/Type
 
 in    λ(f : Type → Type)
     → λ(functor : Functor f)
     → λ(a : Type)
-    →     let cata = (./recursive f a).cata
+    →     let Free = ./Type f a
       
-      in  let embed
-              : FreeF f a (Free f a) → Free f a
-              =   λ(fm : FreeF f a (Free f a))
-                → λ(r : Type)
-                → λ(kp : a → r)
-                → λ(kf : f r → r)
-                → merge
-                  { Pure =
-                      λ(x : a) → kp x
-                  , Free =
-                        λ(x : f (Free f a))
-                      → kf
-                        ( functor.map
-                          (Free f a)
-                          r
-                          (λ(y : Free f a) → y r kp kf)
-                          x
-                        )
-                  }
-                  fm
+      in  let FreeF = ./../FreeF/Type f a
+          
+      in  let FreeF/functor = ./../FreeF/functor f functor a
+          
+      in  let MuFree = ./../Mu/Type FreeF
+          
+      in  let Mu/steppable = ./../Mu/steppable FreeF FreeF/functor
+          
+      in  let toMu = ./toMu f a
+          
+      in  let fromMu = ./fromMu f a
           
       in    { embed =
-                embed
+                  λ(fm : FreeF Free)
+                → fromMu
+                  ( Mu/steppable.embed
+                    ( FreeF/functor.map
+                      Free
+                      MuFree
+                      toMu
+                      fm
+                    )
+                  )
             , project =
-                ./../lambek
-                (./Type f a)
-                (FreeF f a)
-                cata
-                embed
-                (./../FreeF/functor f functor a)
+                  λ(fm : Free)
+                → FreeF/functor.map
+                  MuFree
+                  Free
+                  fromMu
+                  (Mu/steppable.project (toMu fm))
             }
-          : ./../Steppable/Type (./Type f a) (FreeF f a)
+          : ./../Steppable/Type Free FreeF

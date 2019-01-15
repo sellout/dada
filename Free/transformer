@@ -8,6 +8,6 @@ in    { lift =
             λ(m : Type → Type)
           → λ(monad : Monad m)
           → λ(a : Type)
-          → ./liftF m { map = monad.map } a
+          → ./liftF m monad.{map} a
       }
     : Transformer ./Type
