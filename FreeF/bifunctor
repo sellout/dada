@@ -1,0 +1,25 @@
+    let Bifunctor =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Bifunctor/Type
+
+in  let Functor =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Functor/Type
+    
+in    λ(F : Type → Type)
+    → λ(functor : Functor F)
+    →   { bimap =
+              λ(a : Type)
+            → λ(b : Type)
+            → λ(c : Type)
+            → λ(d : Type)
+            → λ(f : a → c)
+            → λ(g : b → d)
+            → λ(m : ./Type F a b)
+            → merge
+              { Pure =
+                  λ(x : a) → (./Type F c d).Pure (f x)
+              , Free =
+                  λ(x : F b) → (./Type F c d).Free (functor.map b d g x)
+              }
+              m
+        }
+      : Bifunctor (./Type F)

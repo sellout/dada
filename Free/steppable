@@ -1,0 +1,33 @@
+    let Functor =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Functor/Type
+
+in    λ(f : Type → Type)
+    → λ(functor : Functor f)
+    → λ(a : Type)
+    →     let Free = ./Type f a
+      
+      in  let FreeF = ./../FreeF/Type f a
+
+      in  let FreeF/functor = ./../FreeF/functor f functor a
+
+      in  let MuFree = ./../Mu/Type FreeF
+
+      in  let Mu/steppable = ./../Mu/steppable FreeF FreeF/functor
+
+      in  let toMu = ./toMu f a
+
+      in  let fromMu = ./fromMu f a
+      
+      in    { embed =
+                  λ(fm : FreeF Free)
+                → fromMu
+                  (Mu/steppable.embed (FreeF/functor.map Free MuFree toMu fm))
+            , project =
+                  λ(fm : Free)
+                → FreeF/functor.map
+                  MuFree
+                  Free
+                  fromMu
+                  (Mu/steppable.project (toMu fm))
+            }
+          : ./../Steppable/Type Free FreeF

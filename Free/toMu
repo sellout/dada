@@ -1,0 +1,8 @@
+  λ(F : Type → Type)
+→ λ(a : Type)
+→ λ(m : ./Type F a)
+→ λ(r : Type)
+→ let FreeF = ./../FreeF/Type F a r
+  
+  in    λ(f : FreeF → r)
+      → m r (λ(x : a) → f (FreeF.Pure x)) (λ(x : F r) → f (FreeF.Free x))

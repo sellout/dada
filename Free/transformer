@@ -1,0 +1,16 @@
+    let Monad =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Monad/Type
+
+in  let Transformer =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Transformer/Type
+
+in  let extractFunctor =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Monad/extractFunctor
+    
+in    { lift =
+            λ(m : Type → Type)
+          → λ(monad : Monad m)
+          → λ(a : Type)
+          → ./liftF m (extractFunctor m monad) a
+      }
+    : Transformer ./Type

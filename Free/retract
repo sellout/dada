@@ -1,0 +1,7 @@
+    let Monad =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Monad/Type
+
+in    λ(f : Type → Type)
+    → λ(monad : Monad f)
+    → λ(a : Type)
+    → ./foldFree f f monad a (λ(b : Type) → λ(x : f b) → x)

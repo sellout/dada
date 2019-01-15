@@ -1,0 +1,21 @@
+    let Foldable =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Foldable/Type
+
+in    λ(F : Type → Type)
+    → λ(foldable : Foldable F)
+    → λ(c : Type)
+    →   { fold =
+              λ(a : Type)
+            → λ(ts : ./Type F c a)
+            → λ(b : Type)
+            → λ(f : a → b → b)
+            → λ(z : b)
+            → merge
+              { Pure =
+                  λ(x : c) → z
+              , Free =
+                  λ(x : F a) → foldable.fold a x b f z
+              }
+              ts
+        }
+      : Foldable (./Type F c)
