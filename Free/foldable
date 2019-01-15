@@ -1,0 +1,33 @@
+    let Foldable =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Foldable/Type
+
+in  let Function/category =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Function/category
+    
+in    λ(F : Type → Type)
+    → λ(foldable : Foldable F)
+    →   { fold =
+              λ(a : Type)
+            → λ(ts : ./Type F a)
+            → λ(b : Type)
+            → λ(f : a → b → b)
+            → (./recursive F a).cata
+              (b → b)
+              (   λ(x : ./../FreeF/Type F a (b → b))
+                → merge
+                  { Pure =
+                      λ(x : a) → f x
+                  , Free =
+                        λ(x : F (b → b))
+                      → foldable.fold
+                        (b → b)
+                        x
+                        (b → b)
+                        (Function/category.compose b b b)
+                        (Function/category.identity b)
+                  }
+                  x
+              )
+              ts
+        }
+      : Foldable (./Type F)
