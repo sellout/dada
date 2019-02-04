@@ -3,7 +3,12 @@
 in  let Functor =
           ./../../dhall-bhat/Functor/Pair/Type
           Type
-          ./../../dhall-bhat/Function/Type
+          ( ./../../dhall-bhat/uncurryT
+            Type
+            Type
+            Type
+            ./../../dhall-bhat/Function/Type
+          )
 
 in    { map =
             λ(b : { _1 : Type, _2 : Type })
@@ -21,4 +26,4 @@ in    { map =
                 }
                 fa
       }
-    : Functor XNor
+    : Functor (./../../dhall-bhat/uncurryT Type Type Type XNor)

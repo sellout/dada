@@ -1,6 +1,8 @@
-    let Functor = ./../../dhall-bhat/Functor/Endo/Set
+    let kArrow = ./../../dhall-bhat/Function/Kind
 
-in    λ(f : Type → Type)
+in  let Functor = ./../../dhall-bhat/Functor/Endo/Set
+
+in    λ(f : kArrow Type Type)
     → λ(functor : Functor f)
     →     let project =
                   λ(t : ./Type f)
@@ -26,7 +28,12 @@ in    λ(f : Type → Type)
       in    { embed =
                 ./../colambek
                 Type
-                ./../../dhall-bhat/Function/Type
+                ( ./../../dhall-bhat/uncurryT
+                  Type
+                  Type
+                  Type
+                  ./../../dhall-bhat/Function/Type
+                )
                 (./Type f)
                 f
                 functor
@@ -37,6 +44,11 @@ in    λ(f : Type → Type)
             }
           : ./../Steppable/Type
             Type
-            ./../../dhall-bhat/Function/Type
+            ( ./../../dhall-bhat/uncurryT
+              Type
+              Type
+              Type
+              ./../../dhall-bhat/Function/Type
+            )
             (./Type f)
             f

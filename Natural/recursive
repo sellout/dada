@@ -8,4 +8,8 @@
         (λ(x : a) → alg ([ x ] : Optional a))
         (alg ([] : Optional a))
   }
-: ./../Recursive/Type Type ./../../dhall-bhat/Function/Type Natural Optional
+: ./../Recursive/Type
+  Type
+  (./../../dhall-bhat/uncurryT Type Type Type ./../../dhall-bhat/Function/Type)
+  Natural
+  Optional

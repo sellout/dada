@@ -19,6 +19,11 @@ in    λ(a : Type)
         }
       : ./../Recursive/Type
         Type
-        ./../../dhall-bhat/Function/Type
+        ( ./../../dhall-bhat/uncurryT
+          Type
+          Type
+          Type
+          ./../../dhall-bhat/Function/Type
+        )
         (List a)
         (XNor a)

@@ -1,6 +1,0 @@
-  λ(cObject : Kind)
-→ λ(dObject : Kind)
-→ λ(dArrow : dObject → dObject → Type)
-→ λ(a : cObject)
-→ λ(b : cObject)
-→ { subst : ∀(f : cObject → dObject) → dArrow (f a) (f b) }

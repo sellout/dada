@@ -1,5 +1,9 @@
-  λ(object : Kind)
-→ λ(arrow : object → object → Type)
-→ λ(f : object → object)
-→ λ(g : object → object)
-→ ∀(a : object) → arrow (f (g a)) (g (f a))
+    let kArrow = ./../../dhall-bhat/Function/Kind
+
+in  let kProduct = ./../../dhall-bhat/Tuple/Kind
+
+in    λ(object : Kind)
+    → λ(arrow : kArrow (kProduct object object) Type)
+    → λ(f : kArrow object object)
+    → λ(g : kArrow object object)
+    → ∀(a : object) → arrow { _1 = f (g a), _2 = g (f a) }

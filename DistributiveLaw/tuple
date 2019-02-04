@@ -1,8 +1,10 @@
-    let Functor = ./../../dhall-bhat/Functor/Endo/Set
+    let kArrow = ./../../dhall-bhat/Function/Kind
+
+in  let Functor = ./../../dhall-bhat/Functor/Endo/Set
 
 in  let Tuple = ./../../dhall-bhat/Tuple/Type
 
-in    λ(f : Type → Type)
+in    λ(f : kArrow Type Type)
     → λ(functor : Functor f)
     → λ(a : Type)
     → λ(algebra : f a → a)
@@ -15,4 +17,13 @@ in    λ(f : Type → Type)
                 functor.map (Tuple a b) b (λ(x : Tuple a b) → x._2) fwa
             }
         )
-      : ./Type Type ./../../dhall-bhat/Function/Type f (Tuple a)
+      : ./Type
+        Type
+        ( ./../../dhall-bhat/uncurryT
+          Type
+          Type
+          Type
+          ./../../dhall-bhat/Function/Type
+        )
+        f
+        (Tuple a)

@@ -1,4 +1,15 @@
 {- Corecursion is simply recursion in the opposite category. -}
-  λ(object : Kind)
-→ λ(arrow : object → object → Type)
-→ ./../Recursive/Type object (./../../dhall-bhat/Category/Op/Type object arrow)
+    let kArrow = ./../../dhall-bhat/Function/Kind
+
+in  let kProduct = ./../../dhall-bhat/Tuple/Kind
+
+in    λ(object : Kind)
+    → λ(arrow : kArrow (kProduct object object) Type)
+    → ./../Recursive/Type
+      object
+      ( ./../../dhall-bhat/uncurryT
+        object
+        object
+        Type
+        (./../../dhall-bhat/Category/Op/Type object arrow)
+      )

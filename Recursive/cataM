@@ -1,55 +1,59 @@
-  λ(object : Kind)
-→ λ(arrow : object → object → Type)
-→ λ(category : ./../../dhall-bhat/Category/Type object arrow)
-→     let Monad = ./../../dhall-bhat/Monad/Type object arrow
-  
-  in  let Starfunctor = ./../../dhall-bhat/Functor/Endo/Star/Type object arrow
-  
-  in    λ(t : object)
-      → λ(base : object → object)
-      → λ(recursive : ./Type object arrow t base)
-      → λ(m : object → object)
-      → λ(monad : Monad m)
-      → λ(functor : Starfunctor m base)
-      → λ(a : object)
-      → λ(algebra : arrow (base a) (m a))
-      →     let Star/category =
-                  ./../../dhall-bhat/Star/category
-                  object
-                  arrow
-                  ( ./../../dhall-bhat/Category/extractSemigroupoid
-                    object
-                    arrow
-                    category
+    let kArrow = ./../../dhall-bhat/Function/Kind
+
+in  let kProduct = ./../../dhall-bhat/Tuple/Kind
+
+in    λ(object : Kind)
+    → λ(arrow : kArrow (kProduct object object) Type)
+    → λ(category : ./../../dhall-bhat/Category/Type object arrow)
+    →     let Monad = ./../../dhall-bhat/Monad/Type object arrow
+      
+      in  let Starfunctor =
+                ./../../dhall-bhat/Functor/Endo/Star/Type object arrow
+      
+      in    λ(t : object)
+          → λ(base : object → object)
+          → λ(recursive : ./Type object arrow t base)
+          → λ(m : object → object)
+          → λ(monad : Monad m)
+          → λ(functor : Starfunctor m base)
+          → λ(a : object)
+          → λ(algebra : arrow { _1 = base a, _2 = m a })
+          →     let Star/category =
+                      ./../../dhall-bhat/Star/category
+                      object
+                      arrow
+                      ( ./../../dhall-bhat/Category/extractSemigroupoid
+                        object
+                        arrow
+                        category
+                      )
+                      m
+                      monad
+            
+            in  let Star/arrow = ./../../dhall-bhat/Star/Type object arrow m
+            
+            in  recursive.cata
+                (m a)
+                ( Star/category.op
+                  { _1 = base (m a), _2 = a }
+                  (   λ(r : Type)
+                    → λ ( arrowsOut
+                        :   ∀(z : object)
+                          → Star/arrow z a
+                          → Star/arrow (base (m a)) z
+                          → r
+                        )
+                    → arrowsOut
+                      (base a)
+                      algebra
+                      ( ./../../dhall-bhat/Functor/Endo/Star/sequence
+                        object
+                        arrow
+                        category
+                        m
+                        base
+                        functor
+                        a
+                      )
                   )
-                  m
-                  monad
-        
-        in  let Star/arrow = ./../../dhall-bhat/Star/Type object arrow m
-        
-        in  recursive.cata
-            (m a)
-            ( Star/category.op
-              (base (m a))
-              a
-              (   λ(r : Type)
-                → λ ( arrowsOut
-                    :   ∀(z : object)
-                      → Star/arrow z a
-                      → Star/arrow (base (m a)) z
-                      → r
-                    )
-                → arrowsOut
-                  (base a)
-                  algebra
-                  ( ./../../dhall-bhat/Functor/Endo/Star/sequence
-                    object
-                    arrow
-                    category
-                    m
-                    base
-                    functor
-                    a
-                  )
-              )
-            )
+                )

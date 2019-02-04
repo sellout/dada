@@ -1,6 +1,8 @@
-    let Functor = ./../../dhall-bhat/Functor/Endo/Set
+    let kArrow = ./../../dhall-bhat/Function/Kind
 
-in    λ(f : Type → Type)
+in  let Functor = ./../../dhall-bhat/Functor/Endo/Set
+
+in    λ(f : kArrow Type Type)
     → λ(functor : Functor f)
     →     let recursive = ./recursive f
       
@@ -15,7 +17,12 @@ in    λ(f : Type → Type)
             , project =
                 ./../lambek
                 Type
-                ./../../dhall-bhat/Function/Type
+                ( ./../../dhall-bhat/uncurryT
+                  Type
+                  Type
+                  Type
+                  ./../../dhall-bhat/Function/Type
+                )
                 (./Type f)
                 f
                 recursive.cata
@@ -24,6 +31,11 @@ in    λ(f : Type → Type)
             }
           : ./../Steppable/Type
             Type
-            ./../../dhall-bhat/Function/Type
+            ( ./../../dhall-bhat/uncurryT
+              Type
+              Type
+              Type
+              ./../../dhall-bhat/Function/Type
+            )
             (./Type f)
             f

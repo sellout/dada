@@ -1,7 +1,11 @@
-  λ(object : Kind)
-→ λ(arrow : object → object → Type)
-→     let Const = ./../../dhall-bhat/Const/Type
-  
-  in    λ(t : object)
-      →   { cata = λ(a : object) → λ(f : arrow t a) → f }
-        : ./../Recursive/Type object arrow t (Const object object t)
+    let kArrow = ./../../dhall-bhat/Function/Kind
+
+in  let kProduct = ./../../dhall-bhat/Tuple/Kind
+
+in    λ(object : Kind)
+    → λ(arrow : kArrow (kProduct object object) Type)
+    →     let Const = ./../../dhall-bhat/Const/Type
+      
+      in    λ(t : object)
+          →   { cata = λ(a : object) → λ(f : arrow { _1 = t, _2 = a }) → f }
+            : ./../Recursive/Type object arrow t (Const object object t)

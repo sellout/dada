@@ -9,11 +9,25 @@ in    { embed =
       , project =
           ./../lambek
           Type
-          ./../../dhall-bhat/Function/Type
+          ( ./../../dhall-bhat/uncurryT
+            Type
+            Type
+            Type
+            ./../../dhall-bhat/Function/Type
+          )
           Natural
           Optional
           (./recursive).cata
           embed
           Optional/functor
       }
-    : ./../Steppable/Type Type ./../../dhall-bhat/Function/Type Natural Optional
+    : ./../Steppable/Type
+      Type
+      ( ./../../dhall-bhat/uncurryT
+        Type
+        Type
+        Type
+        ./../../dhall-bhat/Function/Type
+      )
+      Natural
+      Optional

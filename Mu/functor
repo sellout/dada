@@ -1,52 +1,48 @@
-  λ(object : Kind)
-→ λ(arrow : object → object → Type)
-→ λ(category : ./../../dhall-bhat/Category/Type object arrow)
-→     let Set = ./../../dhall-bhat/Function/Type
-  
-  in  let Set/category = ./../../dhall-bhat/Function/category
-  
-  in  let Bifunctor =
-            ./../../dhall-bhat/Functor/Bifunctor/Type
-            object
-            Type
-            Type
-            arrow
-            Set
-            Set
-  
-  in  let Bifunctor/terms =
-            ./../../dhall-bhat/Functor/Bifunctor/terms.dhall
-            object
-            arrow
-            category
-            Type
-            Set
-            Set/category
-            Type
-            Set
-  
-  in  let Functor = ./../../dhall-bhat/Functor/Type object Type arrow Set
-  
-  in    λ(f : object → Type → Type)
-      → λ(functor : Bifunctor f)
-      →     let Bifunctor/first = (Bifunctor/terms f functor).first
-        
-        in    { map =
+    let kArrow = ./../../dhall-bhat/Function/Kind
+
+in  let kProduct = ./../../dhall-bhat/Tuple/Kind
+
+in    λ(object : Kind)
+    → λ(arrow : kArrow (kProduct object object) Type)
+    →     let Set =
+                ./../../dhall-bhat/uncurryT
+                Type
+                Type
+                Type
+                ./../../dhall-bhat/Function/Type
+      
+      in  let Set/category = ./../../dhall-bhat/Function/category
+      
+      in  let Functor = ./../../dhall-bhat/Functor/Type object Type arrow Set
+      
+      in    λ(f : kArrow (kProduct object Type) Type)
+          → λ ( functor
+              : ∀(x : Type) → Functor (λ(a : object) → f { _1 = a, _2 = x })
+              )
+          →   { map =
                     λ(a : object)
                   → λ(b : object)
-                  → λ(fn : arrow a b)
-                  → λ(ma : ./Type (f a))
+                  → λ(fn : arrow { _1 = a, _2 = b })
+                  → λ(ma : ./Type (λ(r : Type) → f { _1 = a, _2 = r }))
                   → λ(x : Type)
-                  → λ(phi : f b x → x)
+                  → λ(phi : f { _1 = b, _2 = x } → x)
                   → ma
                     x
                     ( Set/category.op
-                      (f a x)
-                      x
+                      { _1 = f { _1 = a, _2 = x }, _2 = x }
                       (   λ(r : Type)
-                        → λ(arrowsOut : ∀(z : Type) → (z → x) → (f a x → z) → r)
-                        → arrowsOut (f b x) phi (Bifunctor/first x a b fn)
+                        → λ ( arrowsOut
+                            :   ∀(z : Type)
+                              → (z → x)
+                              → (f { _1 = a, _2 = x } → z)
+                              → r
+                            )
+                        → arrowsOut
+                          (f { _1 = b, _2 = x })
+                          phi
+                          ((functor x).map a b fn)
                       )
                     )
               }
-            : Functor (λ(a : object) → ./Type (f a))
+            : Functor
+              (λ(a : object) → ./Type (λ(r : Type) → f { _1 = a, _2 = r }))

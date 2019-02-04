@@ -16,7 +16,12 @@ in    λ(a : Type)
             , project =
                 ./../lambek
                 Type
-                ./../../dhall-bhat/Function/Type
+                ( ./../../dhall-bhat/uncurryT
+                  Type
+                  Type
+                  Type
+                  ./../../dhall-bhat/Function/Type
+                )
                 (List a)
                 (XNor a)
                 (./recursive a).cata
@@ -25,6 +30,11 @@ in    λ(a : Type)
             }
           : ./../Steppable/Type
             Type
-            ./../../dhall-bhat/Function/Type
+            ( ./../../dhall-bhat/uncurryT
+              Type
+              Type
+              Type
+              ./../../dhall-bhat/Function/Type
+            )
             (List a)
             (XNor a)

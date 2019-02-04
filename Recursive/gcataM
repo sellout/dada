@@ -1,33 +1,41 @@
 {- All folds are equally powerful, but this one gives us the easiest way to
    define the others.
 -}
-    let Comonad = ./../../dhall-bhat/Comonad/Type
+    let kArrow = ./../../dhall-bhat/Function/Kind
+
+in  let kProduct = ./../../dhall-bhat/Tuple/Kind
+
+in  let Comonad = ./../../dhall-bhat/Comonad/Type
 
 in  let Monad = ./../../dhall-bhat/Monad/Type
 
 in  let Starfunctor = ./../../dhall-bhat/Functor/Endo/Star/Type
 
 in    λ(object : Kind)
-    → λ(arrow : object → object → Type)
+    → λ(arrow : kArrow (kProduct object object) Type)
     → λ(category : ./../../dhall-bhat/Category/Type object arrow)
     → λ(t : object)
-    → λ(base : object → object)
+    → λ(base : kArrow object object)
     → λ(functor2 : ./../../dhall-bhat/Functor/Endo/Type object arrow base)
     → λ(recursive : ./Type object arrow t base)
-    → λ(m : object → object)
+    → λ(m : kArrow object object)
     → λ(monad : Monad object arrow m)
     → λ(functor : Starfunctor object arrow m base)
-    → λ(w : object → object)
+    → λ(w : kArrow object object)
     → λ(comonad : Comonad object arrow w)
     → λ(traverse : Starfunctor object arrow m w)
     → λ(k : ./../DistributiveLaw/Type object arrow base w)
     → λ(a : object)
-    → λ(algebra : arrow (base (w a)) (m a))
+    → λ(algebra : arrow { _1 = base (w a), _2 = m a })
     → category.op
-      t
-      (m a)
+      { _1 = t, _2 = m a }
       (   λ(r : Type)
-        → λ(arrowsOut : ∀(z : object) → arrow z (m a) → arrow t z → r)
+        → λ ( arrowsOut
+            :   ∀(z : object)
+              → arrow { _1 = z, _2 = m a }
+              → arrow { _1 = t, _2 = z }
+              → r
+            )
         → arrowsOut
           (m (w a))
           (monad.map (w a) a (comonad.identity a))
@@ -43,26 +51,24 @@ in    λ(object : Kind)
             functor
             (w a)
             ( category.op
-              (base (w a))
-              (m (w a))
+              { _1 = base (w a), _2 = m (w a) }
               (   λ(r : Type)
                 → λ ( arrowsOut
                     :   ∀(z : object)
-                      → arrow z (m (w a))
-                      → arrow (base (w a)) z
+                      → arrow { _1 = z, _2 = m (w a) }
+                      → arrow { _1 = base (w a), _2 = z }
                       → r
                     )
                 → arrowsOut
                   (w (base (w a)))
                   (traverse.map (base (w a)) a algebra)
                   ( category.op
-                    (base (w a))
-                    (w (base (w a)))
+                    { _1 = base (w a), _2 = w (base (w a)) }
                     (   λ(r : Type)
                       → λ ( arrowsOut
                           :   ∀(z : object)
-                            → arrow z (w (base (w a)))
-                            → arrow (base (w a)) z
+                            → arrow { _1 = z, _2 = w (base (w a)) }
+                            → arrow { _1 = base (w a), _2 = z }
                             → r
                           )
                       → arrowsOut

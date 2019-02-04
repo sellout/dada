@@ -5,4 +5,13 @@
         → λ(fixed : ./Type f)
         → fixed a algebra
     }
-  : ./../Recursive/Type Type ./../../dhall-bhat/Function/Type (./Type f) f
+  : ./../Recursive/Type
+    Type
+    ( ./../../dhall-bhat/uncurryT
+      Type
+      Type
+      Type
+      ./../../dhall-bhat/Function/Type
+    )
+    (./Type f)
+    f

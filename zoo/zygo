@@ -1,4 +1,11 @@
-    let Set = ./../../dhall-bhat/Function/Type
+    let kArrow = ./../../dhall-bhat/Function/Kind
+
+in  let Set =
+          ./../../dhall-bhat/uncurryT
+          Type
+          Type
+          Type
+          ./../../dhall-bhat/Function/Type
 
 in  let Set/category = ./../../dhall-bhat/Function/category
 
@@ -14,7 +21,7 @@ in  let Tuple/endofunctor =
           (./../../dhall-bhat/Identity/functor/endo Type Set)
 
 in    λ(t : Type)
-    → λ(base : Type → Type)
+    → λ(base : kArrow Type Type)
     → λ(functor : Endofunctor base)
     → λ(recursive : ./../Recursive/Type Type Set t base)
     → λ(b : Type)

@@ -1,6 +1,6 @@
 ./../../dhall-bhat/Functor/Pair/terms.dhall
 Type
-./../../dhall-bhat/Function/Type
+(./../../dhall-bhat/uncurryT Type Type Type ./../../dhall-bhat/Function/Type)
 ./../../dhall-bhat/Function/category
-./Type
+(./../../dhall-bhat/uncurryT Type Type Type ./Type)
 ./functor

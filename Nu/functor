@@ -1,62 +1,56 @@
-  λ(object : Kind)
-→ λ(arrow : object → object → Type)
-→ λ(category : ./../../dhall-bhat/Category/Type object arrow)
-→     let Set = ./../../dhall-bhat/Function/Type
-  
-  in  let Set/category = ./../../dhall-bhat/Function/category
-  
-  in  let Bifunctor =
-            ./../../dhall-bhat/Functor/Bifunctor/Type
-            object
-            Type
-            Type
-            arrow
-            Set
-            Set
-  
-  in  let Bifunctor/terms =
-            ./../../dhall-bhat/Functor/Bifunctor/terms.dhall
-            object
-            arrow
-            category
-            Type
-            Set
-            Set/category
-            Type
-            Set
-  
-  in  let Functor = ./../../dhall-bhat/Functor/Type object Type arrow Set
-  
-  in    λ(f : object → Type → Type)
-      → λ(functor : Bifunctor f)
-      →     let Bifunctor/first = (Bifunctor/terms f functor).first
-        
-        in    { map =
+    let kArrow = ./../../dhall-bhat/Function/Kind
+
+in  let kProduct = ./../../dhall-bhat/Tuple/Kind
+
+in    λ(object : Kind)
+    → λ(arrow : kArrow (kProduct object object) Type)
+    →     let Set =
+                ./../../dhall-bhat/uncurryT
+                Type
+                Type
+                Type
+                ./../../dhall-bhat/Function/Type
+      
+      in  let Set/category = ./../../dhall-bhat/Function/category
+      
+      in  let Functor = ./../../dhall-bhat/Functor/Type object Type arrow Set
+      
+      in    λ(f : kArrow (kProduct object Type) Type)
+          → λ ( functor
+              : ∀(x : Type) → Functor (λ(a : object) → f { _1 = a, _2 = x })
+              )
+          →   { map =
                     λ(a : object)
                   → λ(b : object)
-                  → λ(fn : arrow a b)
-                  → λ(nu : ./Type (f a))
+                  → λ(fn : arrow { _1 = a, _2 = b })
+                  → λ(nu : ./Type (λ(r : Type) → f { _1 = a, _2 = r }))
                   → λ(r : Type)
                   → λ ( unfold
-                      : ∀(z : Type) → { coalgebra : z → f b z, seed : z } → r
+                      :   ∀(z : Type)
+                        → { coalgebra : z → f { _1 = b, _2 = z }, seed : z }
+                        → r
                       )
                   → nu
                     r
                     (   λ(y : Type)
-                      → λ(nub : { coalgebra : y → f a y, seed : y })
+                      → λ ( nub
+                          : { coalgebra : y → f { _1 = a, _2 = y }, seed : y }
+                          )
                       → unfold
                         y
                         { coalgebra =
                             Set/category.op
-                            y
-                            (f b y)
+                            { _1 = y, _2 = f { _1 = b, _2 = y } }
                             (   λ(r : Type)
                               → λ ( arrowsOut
-                                  : ∀(z : Type) → (z → f b y) → (y → z) → r
+                                  :   ∀(z : Type)
+                                    → (z → f { _1 = b, _2 = y })
+                                    → (y → z)
+                                    → r
                                   )
                               → arrowsOut
-                                (f a y)
-                                (Bifunctor/first y a b fn)
+                                (f { _1 = a, _2 = y })
+                                ((functor y).map a b fn)
                                 nub.coalgebra
                             )
                         , seed =
@@ -64,4 +58,5 @@
                         }
                     )
               }
-            : Functor (λ(a : object) → ./Type (f a))
+            : Functor
+              (λ(a : object) → ./Type (λ(r : Type) → f { _1 = a, _2 = r }))

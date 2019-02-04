@@ -1,13 +1,15 @@
-    let Functor = ./../../dhall-bhat/Functor/Endo/Set
+    let kArrow = ./../../dhall-bhat/Function/Kind
+
+in  let Functor = ./../../dhall-bhat/Functor/Endo/Set
 
 in  let Either = ./../../dhall-bhat/Either/Type
 
-in    λ(f : Type → Type)
+in    λ(f : kArrow Type Type)
     → λ(functor : Functor f)
     → λ(a : Type)
     → λ(coalgebra : a → f a)
     →   (   λ(b : Type)
-          →     let E = constructors (Either a b)
+          →     let E = Either a b
             
             in    λ(mfa : Either a (f b))
                 → merge
@@ -18,4 +20,13 @@ in    λ(f : Type → Type)
                   }
                   mfa
         )
-      : ./Type Type ./../../dhall-bhat/Function/Type (Either a) f
+      : ./Type
+        Type
+        ( ./../../dhall-bhat/uncurryT
+          Type
+          Type
+          Type
+          ./../../dhall-bhat/Function/Type
+        )
+        (Either a)
+        f

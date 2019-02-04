@@ -1,10 +1,18 @@
-    let Functor = ./../dhall-bhat/Functor/Endo/Type
+    let kArrow = ./../dhall-bhat/Function/Kind
+
+in  let kProduct = ./../dhall-bhat/Tuple/Kind
+
+in  let Functor = ./../dhall-bhat/Functor/Endo/Type
 
 in    λ(object : Kind)
-    → λ(arrow : object → object → Type)
+    → λ(arrow : kArrow (kProduct object object) Type)
     → λ(t : object)
-    → λ(base : object → object)
-    → λ(cata : ∀(a : object) → arrow (base a) a → arrow t a)
-    → λ(embed : arrow (base t) t)
+    → λ(base : kArrow object object)
+    → λ ( cata
+        :   ∀(a : object)
+          → arrow { _1 = base a, _2 = a }
+          → arrow { _1 = t, _2 = a }
+        )
+    → λ(embed : arrow { _1 = base t, _2 = t })
     → λ(functor : Functor object arrow base)
     → cata (base t) (functor.map (base t) t embed)

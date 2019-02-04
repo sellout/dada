@@ -1,5 +1,13 @@
-  λ(object : Kind)
-→ λ(arrow : object → object → Type)
-→ λ(t : object)
-→ λ(base : object → object)
-→ { embed : arrow (base t) t, project : arrow t (base t) }
+    let kArrow = ./../../dhall-bhat/Function/Kind
+
+in  let kProduct = ./../../dhall-bhat/Tuple/Kind
+
+in    λ(object : Kind)
+    → λ(arrow : kArrow (kProduct object object) Type)
+    → λ(t : object)
+    → λ(base : kArrow object object)
+    → { embed :
+          arrow { _1 = base t, _2 = t }
+      , project :
+          arrow { _1 = t, _2 = base t }
+      }
