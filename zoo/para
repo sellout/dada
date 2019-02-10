@@ -1,13 +1,8 @@
-    let kArrow = ./../../dhall-bhat/Function/Kind
+    let kArrow = ./../../caterwaul/Function/Kind
 
-in  let Set =
-          ./../../dhall-bhat/uncurryT
-          Type
-          Type
-          Type
-          ./../../dhall-bhat/Function/Type
+in  let Set = ./../../caterwaul/Function/Type
 
-in  let Endofunctor = ./../../dhall-bhat/Functor/Endo/Type Type Set
+in  let Endofunctor = ./../../caterwaul/Functor/Endo/Type Type Set
 
 in    λ(t : Type)
     → λ(base : kArrow Type Type)

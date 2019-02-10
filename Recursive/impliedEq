@@ -4,22 +4,17 @@
    TODO: This needs both `zipWith` and some `Listable.toList` implemented in
          order to be complete.
 -}
-    let kArrow = ./../../dhall-bhat/Function/Kind
+    let kArrow = ./../../caterwaul/Function/Kind
 
 in  let object = Type
 
-in  let arrow =
-          ./../../dhall-bhat/uncurryT
-          Type
-          Type
-          Type
-          ./../../dhall-bhat/Function/Type
+in  let arrow = ./../../caterwaul/Function/Type
 
-in  let Eq = ./../../dhall-bhat/Eq/Type
+in  let Eq = ./../../caterwaul/Eq/Type
 
 in    λ(t : object)
     → λ(f : kArrow object object)
-    → λ(functor : ./../../dhall-bhat/Functor/Endo/Type object arrow f)
+    → λ(functor : ./../../caterwaul/Functor/Endo/Type object arrow f)
     → λ(steppable : ./../Steppable/Type object arrow t f)
     → λ(recursive : ./../Recursive/Type object arrow t f)
     → λ(eq : Eq (f {}))
@@ -34,7 +29,7 @@ in    λ(t : object)
         )
     → λ(toList : ∀(a : Type) → f a → List a)
     →     let Functor/void =
-                ./../../dhall-bhat/Functor/void object arrow f functor
+                ./../../caterwaul/Functor/void object arrow f functor
       
       in    { eq =
                 recursive.cata

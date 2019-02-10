@@ -1,19 +1,14 @@
-    let kArrow = ./../../dhall-bhat/Function/Kind
+    let kArrow = ./../../caterwaul/Function/Kind
 
-in  let kProduct = ./../../dhall-bhat/Tuple/Kind
+in  let kProduct = ./../../caterwaul/Tuple/Kind
 
 in    λ(object : Kind)
     → λ(arrow : kArrow (kProduct object object) Type)
-    →     let Set =
-                ./../../dhall-bhat/uncurryT
-                Type
-                Type
-                Type
-                ./../../dhall-bhat/Function/Type
+    →     let Set = ./../../caterwaul/Function/Type
       
-      in  let Set/category = ./../../dhall-bhat/Function/category
+      in  let Set/category = ./../../caterwaul/Function/category
       
-      in  let Functor = ./../../dhall-bhat/Functor/Type object Type arrow Set
+      in  let Functor = ./../../caterwaul/Functor/Type object Type arrow Set
       
       in    λ(f : kArrow (kProduct object Type) Type)
           → λ ( functor

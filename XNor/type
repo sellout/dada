@@ -1,1 +1,2 @@
-λ(a : Type) → λ(b : Type) → < Both : { head : a, tail : b } | Neither : {} >
+  λ(a : { _1 : Type, _2 : Type })
+→ < Both : { head : a._1, tail : a._2 } | Neither : {} >

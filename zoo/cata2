@@ -2,15 +2,15 @@
   `Recursive`) and folds over them simultaneously, much like a recursive
   `Applicative.op`.
 -}
-    let kArrow = ./../../dhall-bhat/Function/Kind
+    let kArrow = ./../../caterwaul/Function/Kind
 
 in  let object = Type
 
-in  let cat = ./../../dhall-bhat/Category/Monoidal/Set/cartesian
+in  let cat = ./../../caterwaul/Category/Set/monoidal/cartesian
 
-in  let semigroupoid = ./../../dhall-bhat/Function/semigroupoid
+in  let semigroupoid = ./../../caterwaul/Function/semigroupoid
 
-in  let Day = ./../../dhall-bhat/Day/Type object cat cat
+in  let Day = ./../../caterwaul/Day/Type object cat cat
 
 in    λ(t : object)
     → λ(f : kArrow object object)
@@ -21,7 +21,7 @@ in    λ(t : object)
     → λ(a : object)
     → semigroupoid.op
       { _1 =
-          cat.arrow { _1 = Day f g a, _2 = a }
+          cat.arrow { _1 = Day { _1 = f, _2 = g } a, _2 = a }
       , _2 =
           cat.arrow { _1 = t, _2 = cat.arrow { _1 = u, _2 = a } }
       }
@@ -29,7 +29,7 @@ in    λ(t : object)
         → λ ( arrowsOut
             :   ∀(z : object)
               → (z → cat.arrow { _1 = t, _2 = cat.arrow { _1 = u, _2 = a } })
-              → (cat.arrow { _1 = Day f g a, _2 = a } → z)
+              → (cat.arrow { _1 = Day { _1 = f, _2 = g } a, _2 = a } → z)
               → r
             )
         → arrowsOut

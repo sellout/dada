@@ -4,7 +4,11 @@ in    λ(a : Type)
     →   { cata =
               λ(b : Type)
             → λ ( alg
-                : ./../algebra Type ./../../dhall-bhat/Function/Type (XNor a) b
+                : ./../algebra
+                  Type
+                  ./../../caterwaul/Function/Type
+                  (λ(c : Type) → XNor { _1 = a, _2 = c })
+                  b
                 )
             → λ(fa : List a)
             → List/fold
@@ -19,11 +23,6 @@ in    λ(a : Type)
         }
       : ./../Recursive/Type
         Type
-        ( ./../../dhall-bhat/uncurryT
-          Type
-          Type
-          Type
-          ./../../dhall-bhat/Function/Type
-        )
+        ./../../caterwaul/Function/Type
         (List a)
-        (XNor a)
+        (λ(b : Type) → XNor { _1 = a, _2 = b })

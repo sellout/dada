@@ -1,4 +1,4 @@
-    let Eq = ./../../dhall-bhat/Eq/Type
+    let Eq = ./../../caterwaul/Eq/Type
 
 in  let XNor = ./Type
 
@@ -7,8 +7,8 @@ in    λ(a : Type)
     → λ(b : Type)
     → λ(eb : Eq b)
     →   { eq =
-              λ(x : XNor a b)
-            → λ(y : XNor a b)
+              λ(x : XNor { _1 = a, _2 = b })
+            → λ(y : XNor { _1 = a, _2 = b })
             → merge
               { Both =
                     λ(xx : { head : a, tail : b })
@@ -32,4 +32,4 @@ in    λ(a : Type)
               }
               x
         }
-      : Eq (XNor a b)
+      : Eq (XNor { _1 = a, _2 = b })

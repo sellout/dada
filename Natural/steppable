@@ -1,4 +1,7 @@
-    let Optional/functor = ./../../dhall-bhat/Optional/functor/endo/set
+    let Optional/functor =
+          ./../../caterwaul/Optional/functor/endo/star
+          (./../../caterwaul/Identity/Type Type)
+          ./../../caterwaul/Identity/functor/monoidal
 
 in  let embed =
             λ(fa : Optional Natural)
@@ -9,25 +12,11 @@ in    { embed =
       , project =
           ./../lambek
           Type
-          ( ./../../dhall-bhat/uncurryT
-            Type
-            Type
-            Type
-            ./../../dhall-bhat/Function/Type
-          )
+          ./../../caterwaul/Function/Type
           Natural
           Optional
           (./recursive).cata
           embed
           Optional/functor
       }
-    : ./../Steppable/Type
-      Type
-      ( ./../../dhall-bhat/uncurryT
-        Type
-        Type
-        Type
-        ./../../dhall-bhat/Function/Type
-      )
-      Natural
-      Optional
+    : ./../Steppable/Type Type ./../../caterwaul/Function/Type Natural Optional

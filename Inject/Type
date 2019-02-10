@@ -1,12 +1,14 @@
-  λ(cObject : Kind)
-→     let dObject = Type
-  
-  in  let dArrow = ./../../dhall-bhat/Function/Type
-  
-  in    λ(f : cObject → dObject)
-      → λ(g : cObject → dObject)
-      → { inject :
-            ∀(a : cObject) → dArrow (f a) (g a)
-        , project :
-            ∀(a : cObject) → dArrow (g a) (Optional (f a))
-        }
+    let kArrow = ./../../caterwaul/Function/Kind
+
+in    λ(cObject : Kind)
+    →     let dObject = Type
+      
+      in  let dArrow = ./../../caterwaul/Function/Type
+      
+      in    λ(f : kArrow cObject dObject)
+          → λ(g : kArrow cObject dObject)
+          → { inject :
+                ∀(a : cObject) → dArrow { _1 = f a, _2 = g a }
+            , project :
+                ∀(a : cObject) → dArrow { _1 = g a, _2 = Optional (f a) }
+            }

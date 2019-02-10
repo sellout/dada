@@ -1,32 +1,35 @@
-    let kArrow = ./../../dhall-bhat/Function/Kind
+    let kArrow = ./../../caterwaul/Function/Kind
 
-in  let Functor = ./../../dhall-bhat/Functor/Endo/Set
+in  let Functor =
+          ./../../caterwaul/Functor/Endo/Type
+          Type
+          ./../../caterwaul/Function/Type
 
-in  let Either = ./../../dhall-bhat/Either/Type
+in  let Either = ./../../caterwaul/Either/Type
 
 in    λ(f : kArrow Type Type)
     → λ(functor : Functor f)
     → λ(a : Type)
     → λ(coalgebra : a → f a)
     →   (   λ(b : Type)
-          →     let E = Either a b
+          →     let E = Either { _1 = a, _2 = b }
             
-            in    λ(mfa : Either a (f b))
+            in    λ(mfa : Either { _1 = a, _2 = f b })
                 → merge
                   { Left =
-                      λ(x : a) → functor.map a (Either a b) E.Left (coalgebra x)
+                        λ(x : a)
+                      → functor.map
+                        a
+                        (Either { _1 = a, _2 = b })
+                        E.Left
+                        (coalgebra x)
                   , Right =
-                      functor.map b (Either a b) E.Right
+                      functor.map b (Either { _1 = a, _2 = b }) E.Right
                   }
                   mfa
         )
       : ./Type
         Type
-        ( ./../../dhall-bhat/uncurryT
-          Type
-          Type
-          Type
-          ./../../dhall-bhat/Function/Type
-        )
-        (Either a)
+        ./../../caterwaul/Function/Type
+        (λ(b : Type) → Either { _1 = a, _2 = b })
         f

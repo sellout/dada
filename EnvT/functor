@@ -1,4 +1,7 @@
-    let Functor = ./../../dhall-bhat/Functor/Endo/Set
+    let Functor =
+          ./../../caterwaul/Functor/Endo/Type
+          Type
+          ./../../caterwaul/Function/Type
 
 in    λ(a : Type)
     → λ(f : Type → Type)

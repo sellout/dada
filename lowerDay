@@ -3,22 +3,22 @@
     you’re not folding a fixed-point of `Day`, so this makes the algebra more
     widely applicable.
 -}
-    let kArrow = ./../dhall-bhat/Function/Kind
+    let kArrow = ./../caterwaul/Function/Kind
 
 in  let object = Type
 
-in  let cat = ./../dhall-bhat/Category/Monoidal/Set/cartesian
+in  let cat = ./../caterwaul/Category/Set/monoidal/cartesian
 
-in  let semigroupoid = ./../dhall-bhat/Function/semigroupoid
+in  let semigroupoid = ./../caterwaul/Function/semigroupoid
 
-in  let Day = ./../dhall-bhat/Day/Type object cat cat
+in  let Day = ./../caterwaul/Day/Type object cat cat
 
 in    λ(f : kArrow object object)
     → λ(t : object)
     → λ(g : kArrow object object)
     → λ(steppable : ./Steppable/Type object cat.arrow t g)
     → λ(a : object)
-    → λ(day : cat.arrow { _1 = Day f g a, _2 = a })
+    → λ(day : cat.arrow { _1 = Day { _1 = f, _2 = g } a, _2 = a })
     → λ(fta : f (t → a))
     → semigroupoid.op
       { _1 = t, _2 = a }
@@ -30,12 +30,14 @@ in    λ(f : kArrow object object)
               → r
             )
         → arrowsOut
-          (Day f g a)
+          (Day { _1 = f, _2 = g } a)
           day
           ( semigroupoid.op
-            { _1 = t, _2 = Day f g a }
+            { _1 = t, _2 = Day { _1 = f, _2 = g } a }
             (   λ(r : Type)
-              → λ(arrowsOut : ∀(z : object) → (z → Day f g a) → (t → z) → r)
+              → λ ( arrowsOut
+                  : ∀(z : object) → (z → Day { _1 = f, _2 = g } a) → (t → z) → r
+                  )
               → arrowsOut
                 (g t)
                 (   λ(gt : g t)

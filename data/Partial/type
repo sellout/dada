@@ -2,6 +2,6 @@
    evaluated in Dhall, but should be able to be interpreted into another
    language and run to completion (or the end of the Universe).
 -}
-    let Either = ./../../../dhall-bhat/Either/Type
+    let Either = ./../../../caterwaul/Either/Type
 
-in  λ(a : Type) → ./../../Nu/Type (Either a)
+in  λ(a : Type) → ./../../Nu/Type (λ(b : Type) → Either { _1 = a, _2 = b })

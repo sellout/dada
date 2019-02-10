@@ -1,8 +1,8 @@
-    let kArrow = ./../dhall-bhat/Function/Kind
+    let kArrow = ./../caterwaul/Function/Kind
 
-in  let kProduct = ./../dhall-bhat/Tuple/Kind
+in  let kProduct = ./../caterwaul/Tuple/Kind
 
-in  let Functor = ./../dhall-bhat/Functor/Endo/Type
+in  let Functor = ./../caterwaul/Functor/Endo/Type
 
 in    λ(object : Kind)
     → λ(arrow : kArrow (kProduct object object) Type)

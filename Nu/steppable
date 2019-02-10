@@ -1,6 +1,9 @@
-    let kArrow = ./../../dhall-bhat/Function/Kind
+    let kArrow = ./../../caterwaul/Function/Kind
 
-in  let Functor = ./../../dhall-bhat/Functor/Endo/Set
+in  let Functor =
+          ./../../caterwaul/Functor/Endo/Type
+          Type
+          ./../../caterwaul/Function/Type
 
 in    λ(f : kArrow Type Type)
     → λ(functor : Functor f)
@@ -28,12 +31,7 @@ in    λ(f : kArrow Type Type)
       in    { embed =
                 ./../colambek
                 Type
-                ( ./../../dhall-bhat/uncurryT
-                  Type
-                  Type
-                  Type
-                  ./../../dhall-bhat/Function/Type
-                )
+                ./../../caterwaul/Function/Type
                 (./Type f)
                 f
                 functor
@@ -44,11 +42,6 @@ in    λ(f : kArrow Type Type)
             }
           : ./../Steppable/Type
             Type
-            ( ./../../dhall-bhat/uncurryT
-              Type
-              Type
-              Type
-              ./../../dhall-bhat/Function/Type
-            )
+            ./../../caterwaul/Function/Type
             (./Type f)
             f

@@ -2,7 +2,7 @@
 
 in    λ(a : Type)
     →     let embed =
-                  λ(fa : XNor a (List a))
+                  λ(fa : XNor { _1 = a, _2 = List a })
                 → merge
                   { Both =
                       λ(q : { head : a, tail : List a }) → [ q.head ] # q.tail
@@ -16,25 +16,15 @@ in    λ(a : Type)
             , project =
                 ./../lambek
                 Type
-                ( ./../../dhall-bhat/uncurryT
-                  Type
-                  Type
-                  Type
-                  ./../../dhall-bhat/Function/Type
-                )
+                ./../../caterwaul/Function/Type
                 (List a)
-                (XNor a)
+                (λ(b : Type) → XNor { _1 = a, _2 = b })
                 (./recursive a).cata
                 embed
                 ((./../XNor/terms.dhall).extractSecondFunctor a)
             }
           : ./../Steppable/Type
             Type
-            ( ./../../dhall-bhat/uncurryT
-              Type
-              Type
-              Type
-              ./../../dhall-bhat/Function/Type
-            )
+            ./../../caterwaul/Function/Type
             (List a)
-            (XNor a)
+            (λ(b : Type) → XNor { _1 = a, _2 = b })

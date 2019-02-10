@@ -1,36 +1,40 @@
-    let kArrow = ./../../dhall-bhat/Function/Kind
+    let kArrow = ./../../caterwaul/Function/Kind
 
-in  let kProduct = ./../../dhall-bhat/Tuple/Kind
+in  let kProduct = ./../../caterwaul/Tuple/Kind
 
 in    λ(object : Kind)
     → λ(arrow : kArrow (kProduct object object) Type)
-    → λ(category : ./../../dhall-bhat/Category/Type object arrow)
-    →     let Monad = ./../../dhall-bhat/Monad/Type object arrow
+    → λ(category : ./../../caterwaul/Category/Type object arrow)
+    →     let Endofunctor = ./../../caterwaul/Functor/Endo/Type object arrow
+      
+      in  let Monad = ./../../caterwaul/Monad/Type object arrow
       
       in  let Starfunctor =
-                ./../../dhall-bhat/Functor/Endo/Star/Type object arrow
+                ./../../caterwaul/Functor/Endo/Star/Type object arrow
       
       in    λ(t : object)
           → λ(base : object → object)
           → λ(recursive : ./Type object arrow t base)
-          → λ(m : object → object)
+          → λ(m : kArrow object object)
+          → λ(efunctor : Endofunctor m)
           → λ(monad : Monad m)
-          → λ(functor : Starfunctor m base)
+          → λ(sfunctor : Starfunctor m base)
           → λ(a : object)
           → λ(algebra : arrow { _1 = base a, _2 = m a })
           →     let Star/category =
-                      ./../../dhall-bhat/Star/category
+                      ./../../caterwaul/Star/category
                       object
                       arrow
-                      ( ./../../dhall-bhat/Category/extractSemigroupoid
+                      ( ./../../caterwaul/Category/extractSemigroupoid
                         object
                         arrow
                         category
                       )
                       m
+                      efunctor
                       monad
             
-            in  let Star/arrow = ./../../dhall-bhat/Star/Type object arrow m
+            in  let Star/arrow = ./../../caterwaul/Star/Type object arrow m
             
             in  recursive.cata
                 (m a)
@@ -39,20 +43,20 @@ in    λ(object : Kind)
                   (   λ(r : Type)
                     → λ ( arrowsOut
                         :   ∀(z : object)
-                          → Star/arrow z a
-                          → Star/arrow (base (m a)) z
+                          → Star/arrow { _1 = z, _2 = a }
+                          → Star/arrow { _1 = base (m a), _2 = z }
                           → r
                         )
                     → arrowsOut
                       (base a)
                       algebra
-                      ( ./../../dhall-bhat/Functor/Endo/Star/sequence
+                      ( ./../../caterwaul/Functor/Endo/Star/sequence
                         object
                         arrow
                         category
                         m
                         base
-                        functor
+                        sfunctor
                         a
                       )
                   )

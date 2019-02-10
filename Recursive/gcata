@@ -1,20 +1,23 @@
 {- FIXME: `functor2` should be replaced by `comonad.{map}`
 -}
-    let kArrow = ./../../dhall-bhat/Function/Kind
+    let kArrow = ./../../caterwaul/Function/Kind
 
-in  let kProduct = ./../../dhall-bhat/Tuple/Kind
+in  let kProduct = ./../../caterwaul/Tuple/Kind
 
 in    λ(object : Kind)
     → λ(arrow : kArrow (kProduct object object) Type)
-    → λ(category : ./../../dhall-bhat/Category/Type object arrow)
-    →     let Comonad = ./../../dhall-bhat/Comonad/Type object arrow
+    → λ(category : ./../../caterwaul/Category/Type object arrow)
+    →     let Comonad = ./../../caterwaul/Comonad/Type object arrow
       
-      in  let Endofunctor = ./../../dhall-bhat/Functor/Endo/Type object arrow
+      in  let Endofunctor = ./../../caterwaul/Functor/Endo/Type object arrow
       
-      in  let Identity = ./../../dhall-bhat/Identity/Type object
+      in  let Identity = ./../../caterwaul/Identity/Type object
+      
+      in  let Identity/functor =
+                ./../../caterwaul/Identity/functor/endo object arrow
       
       in  let Identity/monad =
-                ./../../dhall-bhat/Identity/monad object arrow category
+                ./../../caterwaul/Identity/monad object arrow category
       
       in    λ(t : object)
           → λ(base : kArrow object object)
@@ -32,6 +35,7 @@ in    λ(object : Kind)
             functor
             recursive
             Identity
+            Identity/functor
             Identity/monad
             functor
             w

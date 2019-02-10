@@ -1,83 +1,88 @@
 {- All folds are equally powerful, but this one gives us the easiest way to
    define the others.
 -}
-    let kArrow = ./../../dhall-bhat/Function/Kind
+    let kArrow = ./../../caterwaul/Function/Kind
 
-in  let kProduct = ./../../dhall-bhat/Tuple/Kind
-
-in  let Comonad = ./../../dhall-bhat/Comonad/Type
-
-in  let Monad = ./../../dhall-bhat/Monad/Type
-
-in  let Starfunctor = ./../../dhall-bhat/Functor/Endo/Star/Type
+in  let kProduct = ./../../caterwaul/Tuple/Kind
 
 in    λ(object : Kind)
     → λ(arrow : kArrow (kProduct object object) Type)
-    → λ(category : ./../../dhall-bhat/Category/Type object arrow)
-    → λ(t : object)
-    → λ(base : kArrow object object)
-    → λ(functor2 : ./../../dhall-bhat/Functor/Endo/Type object arrow base)
-    → λ(recursive : ./Type object arrow t base)
-    → λ(m : kArrow object object)
-    → λ(monad : Monad object arrow m)
-    → λ(functor : Starfunctor object arrow m base)
-    → λ(w : kArrow object object)
-    → λ(comonad : Comonad object arrow w)
-    → λ(traverse : Starfunctor object arrow m w)
-    → λ(k : ./../DistributiveLaw/Type object arrow base w)
-    → λ(a : object)
-    → λ(algebra : arrow { _1 = base (w a), _2 = m a })
-    → category.op
-      { _1 = t, _2 = m a }
-      (   λ(r : Type)
-        → λ ( arrowsOut
-            :   ∀(z : object)
-              → arrow { _1 = z, _2 = m a }
-              → arrow { _1 = t, _2 = z }
-              → r
-            )
-        → arrowsOut
-          (m (w a))
-          (monad.map (w a) a (comonad.identity a))
-          ( ./cataM
-            object
-            arrow
-            category
-            t
-            base
-            recursive
-            m
-            monad
-            functor
-            (w a)
-            ( category.op
-              { _1 = base (w a), _2 = m (w a) }
-              (   λ(r : Type)
-                → λ ( arrowsOut
-                    :   ∀(z : object)
-                      → arrow { _1 = z, _2 = m (w a) }
-                      → arrow { _1 = base (w a), _2 = z }
-                      → r
-                    )
-                → arrowsOut
-                  (w (base (w a)))
-                  (traverse.map (base (w a)) a algebra)
+    → λ(category : ./../../caterwaul/Category/Type object arrow)
+    →     let Comonad = ./../../caterwaul/Comonad/Type object arrow
+      
+      in  let Endofunctor = ./../../caterwaul/Functor/Endo/Type object arrow
+      
+      in  let Monad = ./../../caterwaul/Monad/Type object arrow
+      
+      in  let Starfunctor =
+                ./../../caterwaul/Functor/Endo/Star/Type object arrow
+      
+      in    λ(t : object)
+          → λ(base : kArrow object object)
+          → λ(functor2 : ./../../caterwaul/Functor/Endo/Type object arrow base)
+          → λ(recursive : ./Type object arrow t base)
+          → λ(m : kArrow object object)
+          → λ(efunctor : Endofunctor m)
+          → λ(monad : Monad m)
+          → λ(sfunctor : Starfunctor m base)
+          → λ(w : kArrow object object)
+          → λ(comonad : Comonad w)
+          → λ(traverse : Starfunctor m w)
+          → λ(k : ./../DistributiveLaw/Type object arrow base w)
+          → λ(a : object)
+          → λ(algebra : arrow { _1 = base (w a), _2 = m a })
+          → category.op
+            { _1 = t, _2 = m a }
+            (   λ(r : Type)
+              → λ ( arrowsOut
+                  :   ∀(z : object)
+                    → arrow { _1 = z, _2 = m a }
+                    → arrow { _1 = t, _2 = z }
+                    → r
+                  )
+              → arrowsOut
+                (m (w a))
+                (efunctor.map (w a) a (comonad.identity a))
+                ( ./cataM
+                  object
+                  arrow
+                  category
+                  t
+                  base
+                  recursive
+                  m
+                  efunctor
+                  monad
+                  sfunctor
+                  (w a)
                   ( category.op
-                    { _1 = base (w a), _2 = w (base (w a)) }
+                    { _1 = base (w a), _2 = m (w a) }
                     (   λ(r : Type)
                       → λ ( arrowsOut
                           :   ∀(z : object)
-                            → arrow { _1 = z, _2 = w (base (w a)) }
+                            → arrow { _1 = z, _2 = m (w a) }
                             → arrow { _1 = base (w a), _2 = z }
                             → r
                           )
                       → arrowsOut
-                        (base (w (w a)))
-                        (k (w a))
-                        (functor2.map (w a) (w (w a)) (comonad.op a))
+                        (w (base (w a)))
+                        (traverse.map (base (w a)) a algebra)
+                        ( category.op
+                          { _1 = base (w a), _2 = w (base (w a)) }
+                          (   λ(r : Type)
+                            → λ ( arrowsOut
+                                :   ∀(z : object)
+                                  → arrow { _1 = z, _2 = w (base (w a)) }
+                                  → arrow { _1 = base (w a), _2 = z }
+                                  → r
+                                )
+                            → arrowsOut
+                              (base (w (w a)))
+                              (k (w a))
+                              (functor2.map (w a) (w (w a)) (comonad.op a))
+                          )
+                        )
                     )
                   )
-              )
+                )
             )
-          )
-      )

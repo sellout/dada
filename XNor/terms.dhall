@@ -1,6 +1,6 @@
-./../../dhall-bhat/Functor/Pair/terms.dhall
+./../../caterwaul/Functor/Pair/terms.dhall
 Type
-(./../../dhall-bhat/uncurryT Type Type Type ./../../dhall-bhat/Function/Type)
-./../../dhall-bhat/Function/category
-(./../../dhall-bhat/uncurryT Type Type Type ./Type)
+./../../caterwaul/Function/Type
+./../../caterwaul/Function/category
+./Type
 ./functor

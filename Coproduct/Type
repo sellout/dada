@@ -1,7 +1,7 @@
   λ(object : Kind)
-→     let Either = ./../../dhall-bhat/Either/Type
+→     let Either = ./../../caterwaul/Either/Type
   
   in    λ(f : object → Type)
       → λ(g : object → Type)
       → λ(a : object)
-      → Either (f a) (g a)
+      → Either { _1 = f a, _2 = g a }

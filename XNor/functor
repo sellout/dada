@@ -1,21 +1,16 @@
     let XNor = ./Type
 
 in  let Functor =
-          ./../../dhall-bhat/Functor/Pair/Type
+          ./../../caterwaul/Functor/Pair/Type
           Type
-          ( ./../../dhall-bhat/uncurryT
-            Type
-            Type
-            Type
-            ./../../dhall-bhat/Function/Type
-          )
+          ./../../caterwaul/Function/Type
 
 in    { map =
             λ(b : { _1 : Type, _2 : Type })
           → λ(c : { _1 : Type, _2 : Type })
           → λ(f : { _1 : b._1 → c._1, _2 : b._2 → c._2 })
-          → λ(fa : XNor b._1 b._2)
-          →     let X = constructors (XNor c._1 c._2)
+          → λ(fa : XNor b)
+          →     let X = XNor c
             
             in  merge
                 { Both =
@@ -26,4 +21,4 @@ in    { map =
                 }
                 fa
       }
-    : Functor (./../../dhall-bhat/uncurryT Type Type Type XNor)
+    : Functor XNor

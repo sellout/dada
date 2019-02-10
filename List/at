@@ -1,8 +1,8 @@
     let object = Type
 
-in  let cat = ./../../dhall-bhat/Category/Monoidal/Set/cartesian
+in  let cat = ./../../caterwaul/Category/Set/monoidal/cartesian
 
-in  let Day = ./../../dhall-bhat/Day/Type object cat cat
+in  let Day = ./../../caterwaul/Day/Type object cat cat
 
 in  let XNor = ./../XNor/Type
 
@@ -12,15 +12,19 @@ in    λ(a : Type)
       Optional
       ./../Natural/recursive
       (List a)
-      (XNor a)
+      (λ(b : Type) → XNor { _1 = a, _2 = b })
       (./steppable a)
       (Optional a)
-      (   λ(day : Day Optional (XNor a) (Optional a))
+      (   λ ( day
+            : Day
+              { _1 = Optional, _2 = λ(b : Type) → XNor { _1 = a, _2 = b } }
+              (Optional a)
+            )
         → day
           (Optional a)
           (   λ(x : { _1 : Type, _2 : Type })
             → λ(f : { _1 : x._1, _2 : x._2 } → Optional a)
-            → λ(p : { _1 : Optional x._1, _2 : XNor a x._2 })
+            → λ(p : { _1 : Optional x._1, _2 : XNor { _1 = a, _2 = x._2 } })
             → merge
               { Neither =
                   λ(_ : {}) → None a
