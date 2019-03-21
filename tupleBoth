@@ -1,0 +1,49 @@
+let Set =
+      https://raw.githubusercontent.com/sellout/caterwaul/master/Category/Set/monoidal/cartesian sha256:b3c97e385d62b718ab11e540a98141cb81b89db0d7c1115ec11b330c596dcf01
+
+let Day =
+      https://raw.githubusercontent.com/sellout/caterwaul/master/Day/Type sha256:681b4b22f4cd4484c75a93d75c4c4a58c7d7b146d8f9e1a52602b49a8fb51f87
+      Type
+      Set
+      Set
+
+let XNor =
+        λ ( a
+          : Type
+          )
+      → λ(b : Type)
+      → ./XNor/Type sha256:d8c92eb1bc64366a069ba26341c4a46d0fcf236c987de0f0ebaa0c35f2488598
+        { _1 = a, _2 = b }
+
+in    λ(a : Type)
+    → λ(b : Type)
+    → λ(i : Type)
+    → λ(day : Day { _1 = XNor a, _2 = XNor b } i)
+    → let X = XNor { _1 : a, _2 : b } i
+      
+      in  day
+          X
+          (   λ(c : { _1 : Type, _2 : Type })
+            → λ(fn : { _1 : c._1, _2 : c._2 } → i)
+            → λ(prod : { _1 : XNor a c._1, _2 : XNor b c._2 })
+            → merge
+              { Both =
+                    λ(p1 : { head : a, tail : c._1 })
+                  → merge
+                    { Both =
+                          λ(p2 : { head : b, tail : c._2 })
+                        → X.Both
+                          { head =
+                              { _1 = p1.head, _2 = p2.head }
+                          , tail =
+                              fn { _1 = p1.tail, _2 = p2.tail }
+                          }
+                    , Neither =
+                        X.Neither
+                    }
+                    prod._2
+              , Neither =
+                  X.Neither
+              }
+              prod._1
+          )

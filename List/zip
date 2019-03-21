@@ -1,0 +1,45 @@
+let Set =
+      https://raw.githubusercontent.com/sellout/caterwaul/master/Category/Set/monoidal/cartesian sha256:b3c97e385d62b718ab11e540a98141cb81b89db0d7c1115ec11b330c596dcf01
+
+let Day =
+      https://raw.githubusercontent.com/sellout/caterwaul/master/Day/Type sha256:681b4b22f4cd4484c75a93d75c4c4a58c7d7b146d8f9e1a52602b49a8fb51f87
+      Type
+      Set
+      Set
+
+let XNor =
+        λ ( a
+          : Type
+          )
+      → λ(b : Type)
+      → ./../XNor/Type sha256:d8c92eb1bc64366a069ba26341c4a46d0fcf236c987de0f0ebaa0c35f2488598
+        { _1 = a, _2 = b }
+
+let cata2 =
+      ./../zoo/cata2 sha256:4501a2d77773c00fbc6f94a7d56fc00aa2d0d9c83e5f5473f28598a95b415dd0
+
+let List/recursive =
+      ./recursive sha256:6e05658351d92fed240e23ebf4cdca420eee2c3c50ea5043a97d60e1989b3f6f
+
+let List/steppable =
+      ./steppable sha256:3bb40dfecfd67957077f962da76025189fcb0ecd885210bd17507d33b8244c33
+
+let tupleBoth =
+      ./../tupleBoth sha256:5466056e4e49d633a350645f9c24de4ac4710639658b964f08a53ce4fc800cbb
+
+in    λ(a : Type)
+    → λ(b : Type)
+    → let Result = List { _1 : a, _2 : b }
+      
+      in  cata2
+          (List a)
+          (XNor a)
+          (List/recursive a)
+          (List b)
+          (XNor b)
+          (List/steppable b)
+          Result
+          (   λ(day : Day { _1 = XNor a, _2 = XNor b } Result)
+            → (List/steppable { _1 : a, _2 : b }).embed
+              (tupleBoth a b Result day)
+          )
