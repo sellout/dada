@@ -1,6 +1,6 @@
   λ(object : Kind)
 → let Either =
-        https://raw.githubusercontent.com/sellout/caterwaul/master/Either/Type sha256:9ac62b105c684db0a562407c0132176c20e93cb29e9434f9b600ed5806cd9fc0
+        https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Either/Type sha256:9ac62b105c684db0a562407c0132176c20e93cb29e9434f9b600ed5806cd9fc0
   
   in    λ(f : object → Type)
       → λ(g : object → Type)

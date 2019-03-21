@@ -2,9 +2,9 @@ let XNor =
       ./Type sha256:d8c92eb1bc64366a069ba26341c4a46d0fcf236c987de0f0ebaa0c35f2488598
 
 in  let Functor =
-          https://raw.githubusercontent.com/sellout/caterwaul/master/Functor/Pair/Type sha256:b1d24e5acae4194d312c360e78a435fc987a229e434f4e5f0994e35adb5ee5c3
+          https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Functor/Pair/Type sha256:b1d24e5acae4194d312c360e78a435fc987a229e434f4e5f0994e35adb5ee5c3
           Type
-          https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
+          https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
     
     in    { map =
                 λ(b : { _1 : Type, _2 : Type })

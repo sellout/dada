@@ -12,7 +12,7 @@
     }
   : ./../Recursive/Type sha256:64e298030b917c0190a219faa415de12632b0d3b2d7660187225637caa22c0ed
     Type
-    https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
+    https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
     ( ./Type sha256:9fc12ae4daed355f4abcf6f8c0e4572524ef0eb4a9a4500df0cddd525617bd68
       f
     )

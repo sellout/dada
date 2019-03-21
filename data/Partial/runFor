@@ -1,8 +1,8 @@
 --     let Either =
---           https://raw.githubusercontent.com/FormationAI/caterwaul/master/Either/Type
+--           https://raw.githubusercontent.com/FormationAI/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Either/Type
 
 -- in  let Either/functor =
---           https://raw.githubusercontent.com/FormationAI/caterwaul/master/Either/functor
+--           https://raw.githubusercontent.com/FormationAI/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Either/functor
 
 -- in    λ(a : Type)
 --     → λ(p : ./Type a)

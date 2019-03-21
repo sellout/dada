@@ -19,7 +19,7 @@ in    λ ( a
             , project =
                 ./../lambek sha256:4ab673b2bbc6443a57fcbc7afe9588938bd4f1c936e02a2595aece8cc704d7a5
                 Type
-                https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
+                https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
                 (List a)
                 (λ(b : Type) → XNor { _1 = a, _2 = b })
                 ( ./recursive sha256:6e05658351d92fed240e23ebf4cdca420eee2c3c50ea5043a97d60e1989b3f6f
@@ -33,6 +33,6 @@ in    λ ( a
             }
           : ./../Steppable/Type sha256:7cda69d1654ef3854e389c2674a997b6a6cec8bb95d873df2d528f7510f2becb
             Type
-            https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
+            https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
             (List a)
             (λ(b : Type) → XNor { _1 = a, _2 = b })

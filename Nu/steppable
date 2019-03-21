@@ -1,10 +1,10 @@
 let kArrow =
-      https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Kind sha256:0b6372c593badac5fe880699fd1cf19dfba07c62fab935a8bad96915866f466e
+      https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Function/Kind sha256:0b6372c593badac5fe880699fd1cf19dfba07c62fab935a8bad96915866f466e
 
 in  let Functor =
-          https://raw.githubusercontent.com/sellout/caterwaul/master/Functor/Endo/Type sha256:f230e076c15a9ae4eb91c84519b9ab384e03b03f0246ebe4dfdf3a2bb82b251a
+          https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Functor/Endo/Type sha256:f230e076c15a9ae4eb91c84519b9ab384e03b03f0246ebe4dfdf3a2bb82b251a
           Type
-          https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
+          https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
     
     in    λ ( f
             : kArrow Type Type
@@ -45,7 +45,7 @@ in  let Functor =
           in    { embed =
                     ./../colambek sha256:789ddfacabd8315021cd730f5b5cc3d9e3219db4ae816772a3581cfd18714ed8
                     Type
-                    https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
+                    https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
                     ( ./Type sha256:36afe8766fa6f825c8c88f46bff2210c6fb4b495d5c961d28b91452680bd5bc5
                       f
                     )
@@ -60,7 +60,7 @@ in  let Functor =
                 }
               : ./../Steppable/Type sha256:7cda69d1654ef3854e389c2674a997b6a6cec8bb95d873df2d528f7510f2becb
                 Type
-                https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
+                https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
                 ( ./Type sha256:36afe8766fa6f825c8c88f46bff2210c6fb4b495d5c961d28b91452680bd5bc5
                   f
                 )

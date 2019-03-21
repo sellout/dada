@@ -5,23 +5,23 @@
          order to be complete.
 -}
 let kArrow =
-      https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Kind sha256:0b6372c593badac5fe880699fd1cf19dfba07c62fab935a8bad96915866f466e
+      https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Function/Kind sha256:0b6372c593badac5fe880699fd1cf19dfba07c62fab935a8bad96915866f466e
 
 in  let object =
           Type
     
     in  let arrow =
-              https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
+              https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
         
         in  let Eq =
-                  https://raw.githubusercontent.com/sellout/caterwaul/master/Eq/Type sha256:6084124c32c2894f3ef6aff7f8762769b309face3a6b507b3cd1108d2fa6b179
+                  https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Eq/Type sha256:6084124c32c2894f3ef6aff7f8762769b309face3a6b507b3cd1108d2fa6b179
             
             in    λ ( t
                     : object
                     )
                 → λ(f : kArrow object object)
                 → λ ( functor
-                    : https://raw.githubusercontent.com/sellout/caterwaul/master/Functor/Endo/Type sha256:f230e076c15a9ae4eb91c84519b9ab384e03b03f0246ebe4dfdf3a2bb82b251a
+                    : https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Functor/Endo/Type sha256:f230e076c15a9ae4eb91c84519b9ab384e03b03f0246ebe4dfdf3a2bb82b251a
                       object
                       arrow
                       f
@@ -52,7 +52,7 @@ in  let object =
                     )
                 → λ(toList : ∀(a : Type) → f a → List a)
                 → let Functor/void =
-                        https://raw.githubusercontent.com/sellout/caterwaul/master/Functor/void sha256:38fe2d191146b60970b7258e6df0b8c14bf477799e4524516220bfe5c96456c3
+                        https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Functor/void sha256:38fe2d191146b60970b7258e6df0b8c14bf477799e4524516220bfe5c96456c3
                         object
                         arrow
                         f

@@ -1,5 +1,5 @@
 let Tuple =
-      https://raw.githubusercontent.com/sellout/caterwaul/master/Tuple/Type sha256:3e54b0739d8286354614bb58323e74a8575dabbabfefed9324ea070a969a3227
+      https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Tuple/Type sha256:3e54b0739d8286354614bb58323e74a8575dabbabfefed9324ea070a969a3227
 
 in    λ ( a
         : Type
