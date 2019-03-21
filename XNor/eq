@@ -1,37 +1,37 @@
 let Eq =
       https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Eq/Type sha256:6084124c32c2894f3ef6aff7f8762769b309face3a6b507b3cd1108d2fa6b179
 
-in  let XNor =
-          ./Type sha256:d8c92eb1bc64366a069ba26341c4a46d0fcf236c987de0f0ebaa0c35f2488598
-    
-    in    λ(a : Type)
-        → λ(ea : Eq a)
-        → λ(b : Type)
-        → λ(eb : Eq b)
-        →   { eq =
-                  λ(x : XNor { _1 = a, _2 = b })
-                → λ(y : XNor { _1 = a, _2 = b })
-                → merge
-                  { Both =
-                        λ(xx : { head : a, tail : b })
-                      → merge
-                        { Both =
-                              λ(yy : { head : a, tail : b })
-                            → ea.eq xx.head yy.head && eb.eq xx.tail yy.tail
-                        , Neither =
-                            λ(q : {}) → False
-                        }
-                        y
-                  , Neither =
-                        λ(q : {})
-                      → merge
-                        { Both =
-                            λ(yy : { head : a, tail : b }) → False
-                        , Neither =
-                            λ(q : {}) → True
-                        }
-                        y
-                  }
-                  x
-            }
-          : Eq (XNor { _1 = a, _2 = b })
+let XNor =
+      ./Type sha256:d8c92eb1bc64366a069ba26341c4a46d0fcf236c987de0f0ebaa0c35f2488598
+
+in    λ(a : Type)
+    → λ(ea : Eq a)
+    → λ(b : Type)
+    → λ(eb : Eq b)
+    →   { eq =
+              λ(x : XNor { _1 = a, _2 = b })
+            → λ(y : XNor { _1 = a, _2 = b })
+            → merge
+              { Both =
+                    λ(xx : { head : a, tail : b })
+                  → merge
+                    { Both =
+                          λ(yy : { head : a, tail : b })
+                        → ea.eq xx.head yy.head && eb.eq xx.tail yy.tail
+                    , Neither =
+                        λ(q : {}) → False
+                    }
+                    y
+              , Neither =
+                    λ(q : {})
+                  → merge
+                    { Both =
+                        λ(yy : { head : a, tail : b }) → False
+                    , Neither =
+                        λ(q : {}) → True
+                    }
+                    y
+              }
+              x
+        }
+      : Eq (XNor { _1 = a, _2 = b })

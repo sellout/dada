@@ -10,11 +10,7 @@
             a
           )
       → λ(fa : Natural)
-      → Natural/fold
-        fa
-        a
-        (λ(x : a) → alg ([ x ] : Optional a))
-        (alg ([] : Optional a))
+      → Natural/fold fa a (λ(x : a) → alg (Some x)) (alg (None a))
   }
 : ./../Recursive/Type sha256:64e298030b917c0190a219faa415de12632b0d3b2d7660187225637caa22c0ed
   Type

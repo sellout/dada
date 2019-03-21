@@ -1,29 +1,29 @@
 let cat =
       https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Category/Set/monoidal/cartesian sha256:b3c97e385d62b718ab11e540a98141cb81b89db0d7c1115ec11b330c596dcf01
 
-in  let Day =
-          https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Day/Type sha256:681b4b22f4cd4484c75a93d75c4c4a58c7d7b146d8f9e1a52602b49a8fb51f87
-          Type
-          cat
-          cat
-    
-    in    λ(day : Day { _1 = Optional, _2 = Optional } Bool)
-        → day
+let Day =
+      https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Day/Type sha256:681b4b22f4cd4484c75a93d75c4c4a58c7d7b146d8f9e1a52602b49a8fb51f87
+      Type
+      cat
+      cat
+
+in    λ(day : Day { _1 = Optional, _2 = Optional } Bool)
+    → day
+      Bool
+      (   λ(b : { _1 : Type, _2 : Type })
+        → λ(dy : { _1 : b._1, _2 : b._2 } → Bool)
+        → λ(p : { _1 : Optional b._1, _2 : Optional b._2 })
+        → Optional/fold
+          b._1
+          p._1
           Bool
-          (   λ(b : { _1 : Type, _2 : Type })
-            → λ(dy : { _1 : b._1, _2 : b._2 } → Bool)
-            → λ(p : { _1 : Optional b._1, _2 : Optional b._2 })
+          (   λ(b1 : b._1)
             → Optional/fold
-              b._1
-              p._1
+              b._2
+              p._2
               Bool
-              (   λ(b1 : b._1)
-                → Optional/fold
-                  b._2
-                  p._2
-                  Bool
-                  (λ(b2 : b._2) → dy { _1 = b1, _2 = b2 })
-                  False
-              )
-              True
+              (λ(b2 : b._2) → dy { _1 = b1, _2 = b2 })
+              False
           )
+          True
+      )

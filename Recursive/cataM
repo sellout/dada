@@ -1,94 +1,93 @@
 let kArrow =
       https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Function/Kind sha256:0b6372c593badac5fe880699fd1cf19dfba07c62fab935a8bad96915866f466e
 
-in  let kProduct =
-          https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Tuple/Kind sha256:03e1c52890f0cda1a2181cd3eb045d5344fc7c907fcbf836736c0e3222c5ffd8
-    
-    in    λ ( object
-            : Kind
-            )
-        → λ(arrow : kArrow (kProduct object object) Type)
-        → λ ( category
-            : https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Category/Type sha256:56874495587bd8bf58b702382562e4aed91603b64a2d6893413c72d5bf265596
-              object
-              arrow
-            )
-        → let Endofunctor =
-                https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Functor/Endo/Type sha256:f230e076c15a9ae4eb91c84519b9ab384e03b03f0246ebe4dfdf3a2bb82b251a
+let kProduct =
+      https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Tuple/Kind sha256:03e1c52890f0cda1a2181cd3eb045d5344fc7c907fcbf836736c0e3222c5ffd8
+
+in    λ ( object
+        : Kind
+        )
+    → λ(arrow : kArrow (kProduct object object) Type)
+    → λ ( category
+        : https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Category/Type sha256:56874495587bd8bf58b702382562e4aed91603b64a2d6893413c72d5bf265596
+          object
+          arrow
+        )
+    → let Endofunctor =
+            https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Functor/Endo/Type sha256:f230e076c15a9ae4eb91c84519b9ab384e03b03f0246ebe4dfdf3a2bb82b251a
+            object
+            arrow
+      
+      let Monad =
+            https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Monad/Type sha256:8001bfc30d9f2c2126215a85e75eb12648fabceb5ea6cdcb05d599256d8dc1bf
+            object
+            arrow
+      
+      let Starfunctor =
+            https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Functor/Endo/Star/Type sha256:bda0cae973d2e4f314fc165f8b7cd96d87f642bc9ce2b22569cac97346068717
+            object
+            arrow
+      
+      in    λ ( t
+              : object
+              )
+          → λ(base : object → object)
+          → λ ( recursive
+              : ./Type sha256:64e298030b917c0190a219faa415de12632b0d3b2d7660187225637caa22c0ed
                 object
                 arrow
-          
-          in  let Monad =
-                    https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Monad/Type sha256:8001bfc30d9f2c2126215a85e75eb12648fabceb5ea6cdcb05d599256d8dc1bf
+                t
+                base
+              )
+          → λ(m : kArrow object object)
+          → λ(efunctor : Endofunctor m)
+          → λ(monad : Monad m)
+          → λ(sfunctor : Starfunctor m base)
+          → λ(a : object)
+          → λ(algebra : arrow { _1 = base a, _2 = m a })
+          → let Star/category =
+                  https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Star/category sha256:f8f4579cee7977813e2d7293796ff9caa2c0487a28033c7a70dc0d8c3478c031
+                  object
+                  arrow
+                  ( https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Category/extractSemigroupoid sha256:00f0aa26c13556cbabfa6f2bc1365e1f1d1677332ff9bd3fc89b7c6946f2d7dc
                     object
                     arrow
-              
-              in  let Starfunctor =
-                        https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Functor/Endo/Star/Type sha256:bda0cae973d2e4f314fc165f8b7cd96d87f642bc9ce2b22569cac97346068717
+                    category
+                  )
+                  m
+                  efunctor
+                  monad
+            
+            let Star/arrow =
+                  https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Star/Type sha256:d7ac58f30d93bd5abe3c3134da0412899a896d023b3c5a92484941e738939ffc
+                  object
+                  arrow
+                  m
+            
+            in  recursive.cata
+                (m a)
+                ( Star/category.op
+                  { _1 = base (m a), _2 = a }
+                  (   λ ( r
+                        : Type
+                        )
+                    → λ ( arrowsOut
+                        :   ∀(z : object)
+                          → Star/arrow { _1 = z, _2 = a }
+                          → Star/arrow { _1 = base (m a), _2 = z }
+                          → r
+                        )
+                    → arrowsOut
+                      (base a)
+                      algebra
+                      ( https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Functor/Endo/Star/sequence sha256:e03867d5ea82abff2cbc6a5d271171e32249de4bc40830a2e523104556434442
                         object
                         arrow
-                  
-                  in    λ ( t
-                          : object
-                          )
-                      → λ(base : object → object)
-                      → λ ( recursive
-                          : ./Type sha256:64e298030b917c0190a219faa415de12632b0d3b2d7660187225637caa22c0ed
-                            object
-                            arrow
-                            t
-                            base
-                          )
-                      → λ(m : kArrow object object)
-                      → λ(efunctor : Endofunctor m)
-                      → λ(monad : Monad m)
-                      → λ(sfunctor : Starfunctor m base)
-                      → λ(a : object)
-                      → λ(algebra : arrow { _1 = base a, _2 = m a })
-                      → let Star/category =
-                              https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Star/category sha256:f8f4579cee7977813e2d7293796ff9caa2c0487a28033c7a70dc0d8c3478c031
-                              object
-                              arrow
-                              ( https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Category/extractSemigroupoid sha256:00f0aa26c13556cbabfa6f2bc1365e1f1d1677332ff9bd3fc89b7c6946f2d7dc
-                                object
-                                arrow
-                                category
-                              )
-                              m
-                              efunctor
-                              monad
-                        
-                        in  let Star/arrow =
-                                  https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Star/Type sha256:d7ac58f30d93bd5abe3c3134da0412899a896d023b3c5a92484941e738939ffc
-                                  object
-                                  arrow
-                                  m
-                            
-                            in  recursive.cata
-                                (m a)
-                                ( Star/category.op
-                                  { _1 = base (m a), _2 = a }
-                                  (   λ ( r
-                                        : Type
-                                        )
-                                    → λ ( arrowsOut
-                                        :   ∀(z : object)
-                                          → Star/arrow { _1 = z, _2 = a }
-                                          → Star/arrow
-                                            { _1 = base (m a), _2 = z }
-                                          → r
-                                        )
-                                    → arrowsOut
-                                      (base a)
-                                      algebra
-                                      ( https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Functor/Endo/Star/sequence sha256:e03867d5ea82abff2cbc6a5d271171e32249de4bc40830a2e523104556434442
-                                        object
-                                        arrow
-                                        category
-                                        m
-                                        base
-                                        sfunctor
-                                        a
-                                      )
-                                  )
-                                )
+                        category
+                        m
+                        base
+                        sfunctor
+                        a
+                      )
+                  )
+                )

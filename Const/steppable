@@ -1,33 +1,33 @@
 let kArrow =
       https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Function/Kind sha256:0b6372c593badac5fe880699fd1cf19dfba07c62fab935a8bad96915866f466e
 
-in  let kProduct =
-          https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Tuple/Kind sha256:03e1c52890f0cda1a2181cd3eb045d5344fc7c907fcbf836736c0e3222c5ffd8
-    
-    in    λ ( object
-            : Kind
-            )
-        → λ(arrow : kArrow (kProduct object object) Type)
-        → λ ( category
-            : https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Category/Type sha256:56874495587bd8bf58b702382562e4aed91603b64a2d6893413c72d5bf265596
-              object
-              arrow
-            )
-        → λ(t : object)
-        →   { embed =
-                category.identity t
-            , project =
-                category.identity t
-            }
-          : ./../Steppable/Type sha256:7cda69d1654ef3854e389c2674a997b6a6cec8bb95d873df2d528f7510f2becb
+let kProduct =
+      https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Tuple/Kind sha256:03e1c52890f0cda1a2181cd3eb045d5344fc7c907fcbf836736c0e3222c5ffd8
+
+in    λ ( object
+        : Kind
+        )
+    → λ(arrow : kArrow (kProduct object object) Type)
+    → λ ( category
+        : https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Category/Type sha256:56874495587bd8bf58b702382562e4aed91603b64a2d6893413c72d5bf265596
+          object
+          arrow
+        )
+    → λ(t : object)
+    →   { embed =
+            category.identity t
+        , project =
+            category.identity t
+        }
+      : ./../Steppable/Type sha256:7cda69d1654ef3854e389c2674a997b6a6cec8bb95d873df2d528f7510f2becb
+        object
+        arrow
+        t
+        (   λ ( z
+              : object
+              )
+          → https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Const/Type sha256:afc07425afed62cb4caa3f39fad3d935f236f71c056585b7dc4f1c7ecba31dbc
             object
-            arrow
-            t
-            (   λ ( z
-                  : object
-                  )
-              → https://raw.githubusercontent.com/sellout/caterwaul/9e79829d7659a9e4f039e59114541489331c9737/Const/Type sha256:afc07425afed62cb4caa3f39fad3d935f236f71c056585b7dc4f1c7ecba31dbc
-                object
-                object
-                { _1 = t, _2 = z }
-            )
+            object
+            { _1 = t, _2 = z }
+        )

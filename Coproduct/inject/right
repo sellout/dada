@@ -14,9 +14,9 @@
               → λ(co : Coproduct f g a)
               → merge
                 { Left =
-                    λ(fa : f a) → [] : Optional (g a)
+                    λ(fa : f a) → None (g a)
                 , Right =
-                    λ(ga : g a) → [ ga ] : Optional (g a)
+                    λ(ga : g a) → Some ga
                 }
                 co
           }

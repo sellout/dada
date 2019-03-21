@@ -3,24 +3,24 @@
 → let Natural/recursive =
         ./recursive sha256:e57a15236d8256244d693f80db372b769d27f17f3a063ae9f8c246573dafb142
   
-  in  let Natural/steppable =
-            ./steppable sha256:d5170606db99a7e2ba56908f176d193981f35497d7bd3150f02d88ee9e7a2fe1
-      
-      in  Natural/recursive.cata
+  let Natural/steppable =
+        ./steppable sha256:d5170606db99a7e2ba56908f176d193981f35497d7bd3150f02d88ee9e7a2fe1
+  
+  in  Natural/recursive.cata
+      (Optional Natural)
+      (   λ(fa : Optional (Optional Natural))
+        → Optional/fold
           (Optional Natural)
-          (   λ(fa : Optional (Optional Natural))
+          fa
+          (Optional Natural)
+          (   λ(fa : Optional Natural)
             → Optional/fold
-              (Optional Natural)
+              Natural
               fa
               (Optional Natural)
-              (   λ(fa : Optional Natural)
-                → Optional/fold
-                  Natural
-                  fa
-                  (Optional Natural)
-                  Natural/steppable.project
-                  ([] : Optional Natural)
-              )
-              ([ a ] : Optional Natural)
+              Natural/steppable.project
+              (None Natural)
           )
-          b
+          (Some a)
+      )
+      b
