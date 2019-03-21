@@ -1,0 +1,9 @@
+  λ(a : Type)
+→ λ(list : List a)
+→ merge
+  { Both =
+      λ(p : { head : a, tail : List a }) → p.tail
+  , Neither =
+      λ(_ : {}) → list
+  }
+  ((./steppable a).project list)
