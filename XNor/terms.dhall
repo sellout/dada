@@ -1,6 +1,6 @@
-./../../caterwaul/Functor/Pair/terms.dhall
+https://raw.githubusercontent.com/sellout/caterwaul/master/Functor/Pair/terms.dhall sha256:f42c2d369ec15a9c7246b60aa67d1408754bad034c585de804c2e88dbd8046cc
 Type
-./../../caterwaul/Function/Type
-./../../caterwaul/Function/category
-./Type
-./functor
+https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
+https://raw.githubusercontent.com/sellout/caterwaul/master/Function/category sha256:de245a327ab65ee050d8adfe6271621e83ceced0333a799c37bef940a119696f
+./Type sha256:d8c92eb1bc64366a069ba26341c4a46d0fcf236c987de0f0ebaa0c35f2488598
+./functor sha256:49483263f65fbb55ef2d07f0340a2224996e39e106cc248cfb56d9bc11f7a010

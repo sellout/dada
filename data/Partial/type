@@ -2,6 +2,11 @@
    evaluated in Dhall, but should be able to be interpreted into another
    language and run to completion (or the end of the Universe).
 -}
-    let Either = ./../../../caterwaul/Either/Type
+let Either =
+      https://raw.githubusercontent.com/sellout/caterwaul/master/Either/Type sha256:9ac62b105c684db0a562407c0132176c20e93cb29e9434f9b600ed5806cd9fc0
 
-in  λ(a : Type) → ./../../Nu/Type (λ(b : Type) → Either { _1 = a, _2 = b })
+in    λ ( a
+        : Type
+        )
+    → ./../../Nu/Type sha256:36afe8766fa6f825c8c88f46bff2210c6fb4b495d5c961d28b91452680bd5bc5
+      (λ(b : Type) → Either { _1 = a, _2 = b })

@@ -1,0 +1,15 @@
+let Natural/recursive =
+      ./recursive sha256:e57a15236d8256244d693f80db372b769d27f17f3a063ae9f8c246573dafb142
+
+in  let Natural/steppable =
+          ./steppable sha256:d5170606db99a7e2ba56908f176d193981f35497d7bd3150f02d88ee9e7a2fe1
+    
+    in  ./../zoo/cata2 sha256:4501a2d77773c00fbc6f94a7d56fc00aa2d0d9c83e5f5473f28598a95b415dd0
+        Natural
+        Optional
+        Natural/recursive
+        Natural
+        Optional
+        Natural/steppable
+        Bool
+        ./compare sha256:bab1e505c46a91217349b37ca3c1294fcd2a9f0cc7dab6dfcb998aae7c190013

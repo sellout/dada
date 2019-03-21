@@ -7,4 +7,10 @@
         → λ(fn : ∀(b : Type) → { coalgebra : b → f b, seed : b } → r)
         → fn a { coalgebra = coalg, seed = s }
     }
-  : ./../Corecursive/Type Type ./../../caterwaul/Function/Type (./Type f) f
+  : ./../Corecursive/Type sha256:067e05df999ca1f769e27661c131b4c0ba90c402cf6e1375401dc01a4538ffe2
+    Type
+    https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
+    ( ./Type sha256:36afe8766fa6f825c8c88f46bff2210c6fb4b495d5c961d28b91452680bd5bc5
+      f
+    )
+    f

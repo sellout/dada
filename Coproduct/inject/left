@@ -1,7 +1,11 @@
   λ(object : Kind)
-→     let Coproduct = ./../../Coproduct/Type object
+→ let Coproduct =
+        ./../../Coproduct/Type sha256:3b89865ee26c22c1b64132fd9d04ab1b9a1d4c24015ea672ba3f0c815b8f4463
+        object
   
-  in    λ(f : object → Type)
+  in    λ ( f
+          : object → Type
+          )
       → λ(g : object → Type)
       →   { inject =
               λ(a : object) → λ(fa : f a) → < Left = fa | Right : g a >
@@ -16,4 +20,7 @@
                 }
                 co
           }
-        : ./../../Inject/Type object f (Coproduct f g)
+        : ./../../Inject/Type sha256:0d2fee8847f80ba088d39c92c4ea7302f07405fa8065080c5aff0c4ff267d920
+          object
+          f
+          (Coproduct f g)

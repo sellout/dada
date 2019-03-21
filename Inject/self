@@ -5,4 +5,7 @@
     , project =
         λ(a : object) → λ(fa : f a) → [ fa ] : Optional (f a)
     }
-  : ./../Inject/type object f f
+  : ./../Inject/type sha256:0d2fee8847f80ba088d39c92c4ea7302f07405fa8065080c5aff0c4ff267d920
+    object
+    f
+    f

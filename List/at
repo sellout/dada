@@ -1,42 +1,62 @@
-    let object = Type
+let object = Type
 
-in  let cat = ./../../caterwaul/Category/Set/monoidal/cartesian
-
-in  let Day = ./../../caterwaul/Day/Type object cat cat
-
-in  let XNor = ./../XNor/Type
-
-in    λ(a : Type)
-    → ./../zoo/cata2
-      Natural
-      Optional
-      ./../Natural/recursive
-      (List a)
-      (λ(b : Type) → XNor { _1 = a, _2 = b })
-      (./steppable a)
-      (Optional a)
-      (   λ ( day
-            : Day
-              { _1 = Optional, _2 = λ(b : Type) → XNor { _1 = a, _2 = b } }
-              (Optional a)
-            )
-        → day
-          (Optional a)
-          (   λ(x : { _1 : Type, _2 : Type })
-            → λ(f : { _1 : x._1, _2 : x._2 } → Optional a)
-            → λ(p : { _1 : Optional x._1, _2 : XNor { _1 = a, _2 = x._2 } })
-            → merge
-              { Neither =
-                  λ(_ : {}) → None a
-              , Both =
-                    λ(b : { head : a, tail : x._2 })
-                  → Optional/fold
-                    x._1
-                    p._1
-                    (Optional a)
-                    (λ(meh : x._1) → f { _1 = meh, _2 = b.tail })
-                    (Some b.head)
-              }
-              p._2
-          )
-      )
+in  let cat =
+          https://raw.githubusercontent.com/sellout/caterwaul/master/Category/Set/monoidal/cartesian sha256:b3c97e385d62b718ab11e540a98141cb81b89db0d7c1115ec11b330c596dcf01
+    
+    in  let Day =
+              https://raw.githubusercontent.com/sellout/caterwaul/master/Day/Type sha256:681b4b22f4cd4484c75a93d75c4c4a58c7d7b146d8f9e1a52602b49a8fb51f87
+              object
+              cat
+              cat
+        
+        in  let XNor =
+                  ./../XNor/Type sha256:d8c92eb1bc64366a069ba26341c4a46d0fcf236c987de0f0ebaa0c35f2488598
+            
+            in    λ ( a
+                    : Type
+                    )
+                → ./../zoo/cata2 sha256:4501a2d77773c00fbc6f94a7d56fc00aa2d0d9c83e5f5473f28598a95b415dd0
+                  Natural
+                  Optional
+                  ./../Natural/recursive sha256:e57a15236d8256244d693f80db372b769d27f17f3a063ae9f8c246573dafb142
+                  (List a)
+                  (λ(b : Type) → XNor { _1 = a, _2 = b })
+                  ( ./steppable sha256:3bb40dfecfd67957077f962da76025189fcb0ecd885210bd17507d33b8244c33
+                    a
+                  )
+                  (Optional a)
+                  (   λ ( day
+                        : Day
+                          { _1 =
+                              Optional
+                          , _2 =
+                              λ(b : Type) → XNor { _1 = a, _2 = b }
+                          }
+                          (Optional a)
+                        )
+                    → day
+                      (Optional a)
+                      (   λ(x : { _1 : Type, _2 : Type })
+                        → λ(f : { _1 : x._1, _2 : x._2 } → Optional a)
+                        → λ ( p
+                            : { _1 :
+                                  Optional x._1
+                              , _2 :
+                                  XNor { _1 = a, _2 = x._2 }
+                              }
+                            )
+                        → merge
+                          { Neither =
+                              λ(_ : {}) → None a
+                          , Both =
+                                λ(b : { head : a, tail : x._2 })
+                              → Optional/fold
+                                x._1
+                                p._1
+                                (Optional a)
+                                (λ(meh : x._1) → f { _1 = meh, _2 = b.tail })
+                                (Some b.head)
+                          }
+                          p._2
+                      )
+                  )

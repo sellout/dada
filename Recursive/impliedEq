@@ -4,56 +4,86 @@
    TODO: This needs both `zipWith` and some `Listable.toList` implemented in
          order to be complete.
 -}
-    let kArrow = ./../../caterwaul/Function/Kind
+let kArrow =
+      https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Kind sha256:0b6372c593badac5fe880699fd1cf19dfba07c62fab935a8bad96915866f466e
 
-in  let object = Type
-
-in  let arrow = ./../../caterwaul/Function/Type
-
-in  let Eq = ./../../caterwaul/Eq/Type
-
-in    λ(t : object)
-    → λ(f : kArrow object object)
-    → λ(functor : ./../../caterwaul/Functor/Endo/Type object arrow f)
-    → λ(steppable : ./../Steppable/Type object arrow t f)
-    → λ(recursive : ./../Recursive/Type object arrow t f)
-    → λ(eq : Eq (f {}))
-    → λ ( zipWith
-        :   ∀(a : Type)
-          → ∀(b : Type)
-          → ∀(c : Type)
-          → (a → b → c)
-          → List a
-          → List b
-          → List c
-        )
-    → λ(toList : ∀(a : Type) → f a → List a)
-    →     let Functor/void =
-                ./../../caterwaul/Functor/void object arrow f functor
-      
-      in    { eq =
-                recursive.cata
-                (t → Bool)
-                (   λ(arg : f (t → Bool))
-                  → λ(b : t)
-                  →     let projected = steppable.project b
-                    
-                    in      eq.eq
-                            (Functor/void (t → Bool) arg)
-                            (Functor/void t projected)
-                        &&  List/fold
-                            Bool
-                            ( zipWith
-                              (t → Bool)
-                              t
-                              Bool
-                              (λ(fn : t → Bool) → λ(meh : t) → fn meh)
-                              (toList (t → Bool) arg)
-                              (toList t projected)
+in  let object =
+          Type
+    
+    in  let arrow =
+              https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
+        
+        in  let Eq =
+                  https://raw.githubusercontent.com/sellout/caterwaul/master/Eq/Type sha256:6084124c32c2894f3ef6aff7f8762769b309face3a6b507b3cd1108d2fa6b179
+            
+            in    λ ( t
+                    : object
+                    )
+                → λ(f : kArrow object object)
+                → λ ( functor
+                    : https://raw.githubusercontent.com/sellout/caterwaul/master/Functor/Endo/Type sha256:f230e076c15a9ae4eb91c84519b9ab384e03b03f0246ebe4dfdf3a2bb82b251a
+                      object
+                      arrow
+                      f
+                    )
+                → λ ( steppable
+                    : ./../Steppable/Type sha256:7cda69d1654ef3854e389c2674a997b6a6cec8bb95d873df2d528f7510f2becb
+                      object
+                      arrow
+                      t
+                      f
+                    )
+                → λ ( recursive
+                    : ./../Recursive/Type sha256:64e298030b917c0190a219faa415de12632b0d3b2d7660187225637caa22c0ed
+                      object
+                      arrow
+                      t
+                      f
+                    )
+                → λ(eq : Eq (f {}))
+                → λ ( zipWith
+                    :   ∀(a : Type)
+                      → ∀(b : Type)
+                      → ∀(c : Type)
+                      → (a → b → c)
+                      → List a
+                      → List b
+                      → List c
+                    )
+                → λ(toList : ∀(a : Type) → f a → List a)
+                → let Functor/void =
+                        https://raw.githubusercontent.com/sellout/caterwaul/master/Functor/void sha256:38fe2d191146b60970b7258e6df0b8c14bf477799e4524516220bfe5c96456c3
+                        object
+                        arrow
+                        f
+                        functor
+                  
+                  in    { eq =
+                            recursive.cata
+                            (t → Bool)
+                            (   λ(arg : f (t → Bool))
+                              → λ(b : t)
+                              → let projected = steppable.project b
+                                
+                                in      eq.eq
+                                        (Functor/void (t → Bool) arg)
+                                        (Functor/void t projected)
+                                    &&  List/fold
+                                        Bool
+                                        ( zipWith
+                                          (t → Bool)
+                                          t
+                                          Bool
+                                          (   λ(fn : t → Bool)
+                                            → λ(meh : t)
+                                            → fn meh
+                                          )
+                                          (toList (t → Bool) arg)
+                                          (toList t projected)
+                                        )
+                                        Bool
+                                        (λ(a : Bool) → λ(b : Bool) → a && b)
+                                        True
                             )
-                            Bool
-                            (λ(a : Bool) → λ(b : Bool) → a && b)
-                            True
-                )
-            }
-          : Eq t
+                        }
+                      : Eq t

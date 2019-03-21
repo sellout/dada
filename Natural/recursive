@@ -1,6 +1,14 @@
   { cata =
-        λ(a : Type)
-      → λ(alg : ./../algebra Type ./../../caterwaul/Function/Type Optional a)
+        λ ( a
+          : Type
+          )
+      → λ ( alg
+          : ./../algebra sha256:78085b625b200d463a90edd4e90fe40ea3349fc6d152a22f881baf4aeed9dc49
+            Type
+            https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
+            Optional
+            a
+          )
       → λ(fa : Natural)
       → Natural/fold
         fa
@@ -8,4 +16,8 @@
         (λ(x : a) → alg ([ x ] : Optional a))
         (alg ([] : Optional a))
   }
-: ./../Recursive/Type Type ./../../caterwaul/Function/Type Natural Optional
+: ./../Recursive/Type sha256:64e298030b917c0190a219faa415de12632b0d3b2d7660187225637caa22c0ed
+  Type
+  https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
+  Natural
+  Optional

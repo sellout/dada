@@ -1,24 +1,25 @@
-    let XNor = ./Type
+let XNor =
+      ./Type sha256:d8c92eb1bc64366a069ba26341c4a46d0fcf236c987de0f0ebaa0c35f2488598
 
 in  let Functor =
-          ./../../caterwaul/Functor/Pair/Type
+          https://raw.githubusercontent.com/sellout/caterwaul/master/Functor/Pair/Type sha256:b1d24e5acae4194d312c360e78a435fc987a229e434f4e5f0994e35adb5ee5c3
           Type
-          ./../../caterwaul/Function/Type
-
-in    { map =
-            λ(b : { _1 : Type, _2 : Type })
-          → λ(c : { _1 : Type, _2 : Type })
-          → λ(f : { _1 : b._1 → c._1, _2 : b._2 → c._2 })
-          → λ(fa : XNor b)
-          →     let X = XNor c
-            
-            in  merge
-                { Both =
-                      λ(xn : { head : b._1, tail : b._2 })
-                    → X.Both { head = f._1 xn.head, tail = f._2 xn.tail }
-                , Neither =
-                    X.Neither
-                }
-                fa
-      }
-    : Functor XNor
+          https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
+    
+    in    { map =
+                λ(b : { _1 : Type, _2 : Type })
+              → λ(c : { _1 : Type, _2 : Type })
+              → λ(f : { _1 : b._1 → c._1, _2 : b._2 → c._2 })
+              → λ(fa : XNor b)
+              → let X = XNor c
+                
+                in  merge
+                    { Both =
+                          λ(xn : { head : b._1, tail : b._2 })
+                        → X.Both { head = f._1 xn.head, tail = f._2 xn.tail }
+                    , Neither =
+                        X.Neither
+                    }
+                    fa
+          }
+        : Functor XNor

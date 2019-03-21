@@ -1,16 +1,29 @@
-    let Functor =
-          ./../../caterwaul/Functor/Endo/Type
-          Type
-          ./../../caterwaul/Function/Type
+let Functor =
+      https://raw.githubusercontent.com/sellout/caterwaul/master/Functor/Endo/Type sha256:f230e076c15a9ae4eb91c84519b9ab384e03b03f0246ebe4dfdf3a2bb82b251a
+      Type
+      https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
 
-in    λ(a : Type)
+in    λ ( a
+        : Type
+        )
     → λ(f : Type → Type)
     → λ(functor : Functor f)
     →   { map =
-              λ(b : Type)
+              λ ( b
+                : Type
+                )
             → λ(c : Type)
             → λ(g : b → c)
-            → λ(q : ./type a f b)
+            → λ ( q
+                : ./type sha256:8dac55a8126853762f7b547b5d01bf7472729e32d13c9f2978e23b5ba523f244
+                  a
+                  f
+                  b
+                )
             → q ⫽ { lower = functor.map b c g q.lower }
         }
-      : Functor (./type a f)
+      : Functor
+        ( ./type sha256:8dac55a8126853762f7b547b5d01bf7472729e32d13c9f2978e23b5ba523f244
+          a
+          f
+        )

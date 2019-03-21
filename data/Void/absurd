@@ -1,6 +1,15 @@
-    let Function/category = ./../../../caterwaul/Function/category
+let Function/category =
+      https://raw.githubusercontent.com/sellout/caterwaul/master/Function/category sha256:de245a327ab65ee050d8adfe6271621e83ceced0333a799c37bef940a119696f
 
-in  let Identity = ./../../../caterwaul/Identity/Type Type
-
-in    λ(a : Type)
-    → (./../../Mu/recursive Identity).cata a (Function/category.identity a)
+in  let Identity =
+          https://raw.githubusercontent.com/sellout/caterwaul/master/Identity/Type sha256:0f2ca3c3cd4682978197536d6365c4002a9b95ebbe882e8562879ee16736c3ae
+          Type
+    
+    in    λ ( a
+            : Type
+            )
+        → ( ./../../Mu/recursive sha256:488b6853a0f309c116a4f9cc52af175dd1adfe456cc37d5eb2fd3d02d70c855b
+            Identity
+          ).cata
+          a
+          (Function/category.identity a)

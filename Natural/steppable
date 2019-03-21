@@ -1,22 +1,29 @@
-    let Optional/functor =
-          ./../../caterwaul/Optional/functor/endo/star
-          (./../../caterwaul/Identity/Type Type)
-          ./../../caterwaul/Identity/functor/monoidal
+let Optional/functor =
+      https://raw.githubusercontent.com/sellout/caterwaul/master/Optional/functor/endo/star sha256:a7465f0bd3be8f635f9035091bc7ff3bdd6ec3c523e6e69d5359b4dcc52039e3
+      ( https://raw.githubusercontent.com/sellout/caterwaul/master/Identity/Type sha256:0f2ca3c3cd4682978197536d6365c4002a9b95ebbe882e8562879ee16736c3ae
+        Type
+      )
+      https://raw.githubusercontent.com/sellout/caterwaul/master/Identity/functor/monoidal sha256:2c113f02d3d833842925e85ffe0c50629d939f6a53bd453ab9127c714204ef26
 
 in  let embed =
             λ(fa : Optional Natural)
           → Optional/fold Natural fa Natural (λ(a : Natural) → a + 1) 0
-
-in    { embed =
-          embed
-      , project =
-          ./../lambek
+    
+    in    { embed =
+              embed
+          , project =
+              ./../lambek sha256:4ab673b2bbc6443a57fcbc7afe9588938bd4f1c936e02a2595aece8cc704d7a5
+              Type
+              https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
+              Natural
+              Optional
+              ( ./recursive sha256:e57a15236d8256244d693f80db372b769d27f17f3a063ae9f8c246573dafb142
+              ).cata
+              embed
+              Optional/functor
+          }
+        : ./../Steppable/Type sha256:7cda69d1654ef3854e389c2674a997b6a6cec8bb95d873df2d528f7510f2becb
           Type
-          ./../../caterwaul/Function/Type
+          https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
           Natural
           Optional
-          (./recursive).cata
-          embed
-          Optional/functor
-      }
-    : ./../Steppable/Type Type ./../../caterwaul/Function/Type Natural Optional

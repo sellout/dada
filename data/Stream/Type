@@ -1,3 +1,8 @@
-    let Tuple = ./../../../caterwaul/Tuple/Type
+let Tuple =
+      https://raw.githubusercontent.com/sellout/caterwaul/master/Tuple/Type sha256:3e54b0739d8286354614bb58323e74a8575dabbabfefed9324ea070a969a3227
 
-in  λ(a : Type) → ./../../Nu/Type (λ(b : Type) → Tuple { _1 = a, _2 = b })
+in    λ ( a
+        : Type
+        )
+    → ./../../Nu/Type sha256:36afe8766fa6f825c8c88f46bff2210c6fb4b495d5c961d28b91452680bd5bc5
+      (λ(b : Type) → Tuple { _1 = a, _2 = b })

@@ -1,2 +1,8 @@
   λ(a : Type)
-→ ./../../Nu/Type (λ(b : Type) → ./../../XNor/Type { _1 = a, _2 = b })
+→ ./../../Nu/Type sha256:36afe8766fa6f825c8c88f46bff2210c6fb4b495d5c961d28b91452680bd5bc5
+  (   λ ( b
+        : Type
+        )
+    → ./../../XNor/Type sha256:d8c92eb1bc64366a069ba26341c4a46d0fcf236c987de0f0ebaa0c35f2488598
+      { _1 = a, _2 = b }
+  )

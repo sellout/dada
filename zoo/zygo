@@ -1,37 +1,66 @@
-    let kArrow = ./../../caterwaul/Function/Kind
+let kArrow =
+      https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Kind sha256:0b6372c593badac5fe880699fd1cf19dfba07c62fab935a8bad96915866f466e
 
-in  let object = Type
-
-in  let arrow = ./../../caterwaul/Function/Type
-
-in  let category = ./../../caterwaul/Function/category
-
-in  let Endofunctor = ./../../caterwaul/Functor/Endo/Type object arrow
-
-in  let Tuple = ./../../caterwaul/Tuple/Type
-
-in  let Tuple/comonad = ./../../caterwaul/Tuple/comonad
-
-in  let Tuple/endofunctor =
-          ./../../caterwaul/Tuple/functor/endo/star
-          (./../../caterwaul/Identity/Type object)
-          (./../../caterwaul/Identity/functor/endo object arrow)
-
-in    λ(t : object)
-    → λ(base : kArrow object object)
-    → λ(functor : Endofunctor base)
-    → λ(recursive : ./../Recursive/Type object arrow t base)
-    → λ(b : object)
-    → λ(helperAlgebra : arrow { _1 = base b, _2 = b })
-    → ./../Recursive/gcata
-      object
-      arrow
-      category
-      t
-      base
-      functor
-      recursive
-      (λ(c : object) → Tuple { _1 = b, _2 = c })
-      (Tuple/comonad b)
-      (Tuple/endofunctor b)
-      (./../DistributiveLaw/tuple base functor b helperAlgebra)
+in  let object =
+          Type
+    
+    in  let arrow =
+              https://raw.githubusercontent.com/sellout/caterwaul/master/Function/Type sha256:44d58123a7ba6bd4f59a8f0fe8363ca585db3061ae3f369d3a26607a127f7927
+        
+        in  let category =
+                  https://raw.githubusercontent.com/sellout/caterwaul/master/Function/category sha256:de245a327ab65ee050d8adfe6271621e83ceced0333a799c37bef940a119696f
+            
+            in  let Endofunctor =
+                      https://raw.githubusercontent.com/sellout/caterwaul/master/Functor/Endo/Type sha256:f230e076c15a9ae4eb91c84519b9ab384e03b03f0246ebe4dfdf3a2bb82b251a
+                      object
+                      arrow
+                
+                in  let Tuple =
+                          https://raw.githubusercontent.com/sellout/caterwaul/master/Tuple/Type sha256:3e54b0739d8286354614bb58323e74a8575dabbabfefed9324ea070a969a3227
+                    
+                    in  let Tuple/comonad =
+                              https://raw.githubusercontent.com/sellout/caterwaul/master/Tuple/comonad sha256:f6d147df97dec2ad2ad43786c647886122017afdb3e3d091a0ed1d7b4aca92ae
+                        
+                        in  let Tuple/endofunctor =
+                                  https://raw.githubusercontent.com/sellout/caterwaul/master/Tuple/functor/endo/star sha256:3c97a7bb76103637d02985c35b33d826822894d5cd6c86757e7b67f85321e908
+                                  ( https://raw.githubusercontent.com/sellout/caterwaul/master/Identity/Type sha256:0f2ca3c3cd4682978197536d6365c4002a9b95ebbe882e8562879ee16736c3ae
+                                    object
+                                  )
+                                  ( https://raw.githubusercontent.com/sellout/caterwaul/master/Identity/functor/endo sha256:564834f3bdf37bba2dae2ffa0dd3fe7036a9152fdc099919bcfbb1a7b39e2348
+                                    object
+                                    arrow
+                                  )
+                            
+                            in    λ ( t
+                                    : object
+                                    )
+                                → λ(base : kArrow object object)
+                                → λ(functor : Endofunctor base)
+                                → λ ( recursive
+                                    : ./../Recursive/Type sha256:64e298030b917c0190a219faa415de12632b0d3b2d7660187225637caa22c0ed
+                                      object
+                                      arrow
+                                      t
+                                      base
+                                    )
+                                → λ(b : object)
+                                → λ ( helperAlgebra
+                                    : arrow { _1 = base b, _2 = b }
+                                    )
+                                → ./../Recursive/gcata sha256:d55c6c971e2b805d4abd55d1192ffdf964caaba66c3b8cda0eede7562c0b2343
+                                  object
+                                  arrow
+                                  category
+                                  t
+                                  base
+                                  functor
+                                  recursive
+                                  (λ(c : object) → Tuple { _1 = b, _2 = c })
+                                  (Tuple/comonad b)
+                                  (Tuple/endofunctor b)
+                                  ( ./../DistributiveLaw/tuple sha256:e23e33a0bd86e9fde7a9ae72c2dcc93ca0e6e2e717f1c0524bcb91091ab8fa76
+                                    base
+                                    functor
+                                    b
+                                    helperAlgebra
+                                  )

@@ -1,1 +1,7 @@
-λ(f : Type → Type) → λ(a : Type) → ./../../Mu/Type (./../../EnvT/Type a f)
+  λ(f : Type → Type)
+→ λ(a : Type)
+→ ./../../Mu/Type sha256:9fc12ae4daed355f4abcf6f8c0e4572524ef0eb4a9a4500df0cddd525617bd68
+  ( ./../../EnvT/Type sha256:8dac55a8126853762f7b547b5d01bf7472729e32d13c9f2978e23b5ba523f244
+    a
+    f
+  )

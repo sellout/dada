@@ -1,3 +1,6 @@
-    let Identity = ./../../../caterwaul/Identity/Type Type
+let Identity =
+      https://raw.githubusercontent.com/sellout/caterwaul/master/Identity/Type sha256:0f2ca3c3cd4682978197536d6365c4002a9b95ebbe882e8562879ee16736c3ae
+      Type
 
-in  ./../../Mu/Type Identity
+in  ./../../Mu/Type sha256:9fc12ae4daed355f4abcf6f8c0e4572524ef0eb4a9a4500df0cddd525617bd68
+    Identity

@@ -5,6 +5,9 @@ lint:
 compile:
 	./scripts/compile.sh
 
+freeze:
+	./scripts/freeze.sh
+
 doc:
 	mkdir -p docs
 	./scripts/doc.sh >docs/index.html
