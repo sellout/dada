@@ -1,0 +1,10 @@
+let B =
+      https://sellout.github.io/dhall-bhat/package.dhall
+        sha256:67617847fca913d17863ad857224cd9b3904297bb15a9674146d5e120c5ff08a
+
+in  λ(t : Type) →
+    λ(base : Type → Type) →
+    λ(cata : ∀(a : Type) → (base a → a) → t → a) →
+    λ(embed : base t → t) →
+    λ(functor : B.Functor.Type base) →
+      cata (base t) (functor.map (base t) t embed)

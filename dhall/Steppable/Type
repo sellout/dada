@@ -1,0 +1,3 @@
+λ(t : Type) →
+λ(base : Type → Type) →
+  { embed : ∀(fa : base t) → t, project : ∀(fixed : t) → base t }

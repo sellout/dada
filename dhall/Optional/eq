@@ -1,0 +1,19 @@
+let P =
+      https://prelude.dhall-lang.org/v20.1.0/package.dhall
+        sha256:26b0ef498663d269e4dc6a82b0ee289ec565d683ef4c00d0ebdd25333a5a3c98
+
+let Equality = ../Eq/Type
+
+in  λ(a : Type) →
+    λ(eq : Equality a) →
+        { eq =
+            λ(x : Optional a) →
+            λ(y : Optional a) →
+              P.Optional.fold
+                a
+                x
+                Bool
+                (λ(xx : a) → P.Optional.fold a y Bool (eq.eq xx) False)
+                (P.Optional.fold a y Bool (λ(yy : a) → False) True)
+        }
+      : Equality (Optional a)

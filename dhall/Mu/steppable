@@ -1,0 +1,18 @@
+let B =
+      https://sellout.github.io/dhall-bhat/package.dhall
+        sha256:67617847fca913d17863ad857224cd9b3904297bb15a9674146d5e120c5ff08a
+
+in  λ(f : Type → Type) →
+    λ(functor : B.Functor.Type f) →
+      let recursive = ./recursive f
+
+      let embed =
+            λ(fm : f (./Type f)) →
+            λ(a : Type) →
+            λ(alg : f a → a) →
+              alg (functor.map (./Type f) a (recursive.cata a alg) fm)
+
+      in    { embed
+            , project = ../lambek (./Type f) f recursive.cata embed functor
+            }
+          : ../Steppable/Type (./Type f) f

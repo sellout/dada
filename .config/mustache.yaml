@@ -1,0 +1,14 @@
+{
+  project:
+    {
+      description:
+        "Recursion schemes provide a total way to support recursion. The \
+         decomposition they encourage also enhances composability and \
+         reusability.",
+      name: "dada",
+      repo: "sellout/dada",
+      summary: "A total recursion scheme library for Dhall",
+      version: "0.1.0",
+    },
+  type: { name: "dhall" },
+}

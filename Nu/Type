@@ -1,4 +1,0 @@
-{- Represents a potentially-infinite structure lazily.
--}
-  λ(f : Type → Type)
-→ ∀(r : Type) → (∀(a : Type) → { coalgebra : a → f a, seed : a } → r) → r

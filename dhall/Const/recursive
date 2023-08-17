@@ -1,0 +1,1 @@
+λ(t : Type) → { cata = ../apply t } : ../Recursive/Type t (./Type t)

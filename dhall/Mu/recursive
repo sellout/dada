@@ -1,0 +1,8 @@
+λ(f : Type → Type) →
+    { cata =
+        λ(a : Type) →
+        λ(algebra : f a → a) →
+        λ(fixed : ./Type f) →
+          fixed a algebra
+    }
+  : ../Recursive/Type (./Type f) f

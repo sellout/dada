@@ -1,0 +1,58 @@
+cabal-version:  2.4
+
+name:                dada
+version:             0.1.0.0
+synopsis:            Total recursion schemes in Dhall.
+description:         Recursion schemes allow you to separate recursion from your
+                     business logic – making your own operations simpler, more
+                     modular, and less error-prone. This library also provides
+                     tools for combining your operations in ways that reduce the
+                     number of passes over your data and is designed to
+                     encourage total (i.e., successfully terminating) functions.
+homepage:            https://github.com/sellout/dada#readme
+bug-reports:         https://github.com/sellout/dada/issues
+author:              Greg Pfeil
+maintainer:          greg@technomadic.org
+copyright:           2018 Greg Pfeil
+license:             AGPL-3.0-or-later
+license-file:        LICENSE
+category:            Recursion
+build-type:          Custom
+extra-source-files:  CHANGELOG.md
+                   , README.md
+tested-with:         GHC==8.6.1,
+                     GHC==8.8.1,
+                     GHC==8.10.1, GHC==8.10.7,
+                     GHC==9.0.1, GHC==9.0.2,
+                     GHC==9.2.1, GHC==9.2.8,
+                     GHC==9.4.1, GHC==9.4.5,
+                     GHC==9.6.1
+
+source-repository head
+  type: git
+  location: https://github.com/sellout/dada
+
+custom-setup
+  setup-depends:
+    base          >= 4.14.3 && < 4.19,
+    cabal-doctest >= 1.0.0  && < 1.1
+
+library
+  hs-source-dirs:      src
+  exposed-modules:     Dada
+  build-depends:       base >= 4.14.3 && < 4.19
+                     , dhall
+                     , unordered-containers
+                     , yaya
+  default-extensions:  LambdaCase
+  default-language:    Haskell2010
+
+test-suite dada-doctests
+  type: exitcode-stdio-1.0
+  hs-source-dirs: tests
+  main-is: doctests.hs
+  build-depends:
+    base    >= 4.14.3 && < 4.19,
+    doctest >= 0.15.0 && < 0.22,
+    dada
+  default-language:    Haskell2010

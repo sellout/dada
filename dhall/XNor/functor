@@ -1,0 +1,21 @@
+let B =
+      https://sellout.github.io/dhall-bhat/package.dhall
+        sha256:67617847fca913d17863ad857224cd9b3904297bb15a9674146d5e120c5ff08a
+
+let XNor = ./Type
+
+in  λ(a : Type) →
+        { map =
+            λ(b : Type) →
+            λ(c : Type) →
+            λ(f : b → c) →
+            λ(fa : XNor a b) →
+              merge
+                { Both =
+                    λ(xn : { head : a, tail : b }) →
+                      (XNor a c).Both { head = xn.head, tail = f xn.tail }
+                , Neither = (XNor a c).Neither
+                }
+                fa
+        }
+      : B.Functor.Type (XNor a)

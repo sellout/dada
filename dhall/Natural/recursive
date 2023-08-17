@@ -1,0 +1,7 @@
+  { cata =
+      λ(a : Type) →
+      λ(alg : ../algebra Optional a) →
+      λ(fa : Natural) →
+        Natural/fold fa a (λ(x : a) → alg (Some x)) (alg (None a))
+  }
+: ../Recursive/Type Natural Optional

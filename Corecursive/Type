@@ -1,3 +1,0 @@
-  λ(t : Type)
-→ λ(base : Type → Type)
-→ { ana : ∀(a : Type) → (a → base a) → a → t }

@@ -1,0 +1,5 @@
+let B =
+      https://sellout.github.io/dhall-bhat/package.dhall
+        sha256:67617847fca913d17863ad857224cd9b3904297bb15a9674146d5e120c5ff08a
+
+in  ../Mu/Type B.Identity.Type

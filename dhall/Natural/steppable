@@ -1,0 +1,17 @@
+let P =
+      https://prelude.dhall-lang.org/v20.1.0/package.dhall
+        sha256:26b0ef498663d269e4dc6a82b0ee289ec565d683ef4c00d0ebdd25333a5a3c98
+
+let B =
+      https://sellout.github.io/dhall-bhat/package.dhall
+        sha256:67617847fca913d17863ad857224cd9b3904297bb15a9674146d5e120c5ff08a
+
+let embed =
+      λ(fa : Optional Natural) →
+        P.Optional.fold Natural fa Natural (λ(a : Natural) → a + 1) 0
+
+in    { embed
+      , project =
+          ../lambek Natural Optional (./recursive).cata embed B.Optional.functor
+      }
+    : ../Steppable/Type Natural Optional

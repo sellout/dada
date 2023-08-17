@@ -1,0 +1,19 @@
+let B =
+      https://sellout.github.io/dhall-bhat/package.dhall
+        sha256:67617847fca913d17863ad857224cd9b3904297bb15a9674146d5e120c5ff08a
+
+in  λ(f : Type → Type → Type) →
+    λ(functor : B.Bifunctor.Type f) →
+        { map =
+            λ(a : Type) →
+            λ(b : Type) →
+            λ(fn : a → b) →
+              (./recursive (f a)).cata
+                (./Type (f b))
+                ( λ(fa : f a (./Type (f b))) →
+                    ( ./steppable (f b) { map = B.Bifunctor.second f functor b }
+                    ).embed
+                      (B.Bifunctor.first f functor a (./Type (f b)) b fn fa)
+                )
+        }
+      : B.Functor.Type (λ(a : Type) → ./Type (f a))

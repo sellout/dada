@@ -1,0 +1,28 @@
+let P =
+      https://prelude.dhall-lang.org/v20.1.0/package.dhall
+        sha256:26b0ef498663d269e4dc6a82b0ee289ec565d683ef4c00d0ebdd25333a5a3c98
+
+let Natural/recursive = ./recursive
+
+let Natural/steppable = ./steppable
+
+in  λ(a : Natural) →
+    λ(b : Natural) →
+      Natural/recursive.cata
+        (Optional Natural)
+        ( λ(fa : Optional (Optional Natural)) →
+            P.Optional.fold
+              (Optional Natural)
+              fa
+              (Optional Natural)
+              ( λ(fa : Optional Natural) →
+                  P.Optional.fold
+                    Natural
+                    fa
+                    (Optional Natural)
+                    Natural/steppable.project
+                    (None Natural)
+              )
+              (Some a)
+        )
+        b

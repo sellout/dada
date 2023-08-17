@@ -1,0 +1,7 @@
+builds:
+  exclude:
+    # TODO: Remove once garnix-io/garnix#285 is fixed.
+    - "homeConfigurations.x86_64-darwin-dada-example"
+  include:
+    - "*.*"
+    - "*.*.*"

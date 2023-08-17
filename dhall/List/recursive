@@ -1,0 +1,18 @@
+let XNor = ../XNor/Type
+
+in  λ(a : Type) →
+        { cata =
+            λ(b : Type) →
+            λ(alg : ../algebra (XNor a) b) →
+            λ(fa : List a) →
+              List/fold
+                a
+                fa
+                b
+                ( λ(x : a) →
+                  λ(y : b) →
+                    alg ((XNor a b).Both { head = x, tail = y })
+                )
+                (alg (XNor a b).Neither)
+        }
+      : ../Recursive/Type (List a) (XNor a)

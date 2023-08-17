@@ -1,0 +1,29 @@
+let B =
+      https://sellout.github.io/dhall-bhat/package.dhall
+        sha256:67617847fca913d17863ad857224cd9b3904297bb15a9674146d5e120c5ff08a
+
+in  λ(f : Type → Type → Type) →
+    λ(functor : B.Bifunctor.Type f) →
+        { map =
+            λ(a : Type) →
+            λ(b : Type) →
+            λ(fn : a → b) →
+              (./corecursive (f b)).ana
+                (./Type (f a))
+                ( λ(t : ./Type (f a)) →
+                    B.Bifunctor.first
+                      f
+                      functor
+                      a
+                      (./Type (f a))
+                      b
+                      fn
+                      ( ( ./steppable
+                            (f a)
+                            { map = B.Bifunctor.second f functor a }
+                        ).project
+                          t
+                      )
+                )
+        }
+      : B.Functor.Type (λ(a : Type) → ./Type (f a))

@@ -1,0 +1,9 @@
+let B =
+      https://sellout.github.io/dhall-bhat/package.dhall
+        sha256:67617847fca913d17863ad857224cd9b3904297bb15a9674146d5e120c5ff08a
+
+in  λ(t : Type) →
+        { embed = B.Function.category.identity t
+        , project = B.Function.category.identity t
+        }
+      : ../Steppable/Type t (./Type t)

@@ -1,0 +1,26 @@
+let P =
+      https://prelude.dhall-lang.org/v20.1.0/package.dhall
+        sha256:26b0ef498663d269e4dc6a82b0ee289ec565d683ef4c00d0ebdd25333a5a3c98
+
+in  λ(a : Type) →
+      let Natural/recursive = ../Natural/recursive
+
+      let List/steppable = ./steppable a
+
+      in  Natural/recursive.cata
+            (List a → Optional a)
+            ( λ(i : Optional (List a → Optional a)) →
+                P.Optional.fold
+                  (List a → Optional a)
+                  i
+                  (List a → Optional a)
+                  ( λ(f : List a → Optional a) →
+                    λ(aa : List a) →
+                      merge
+                        { Both = λ(b : { head : a, tail : List a }) → f b.tail
+                        , Neither = None a
+                        }
+                        (List/steppable.project aa)
+                  )
+                  (List/head a)
+            )

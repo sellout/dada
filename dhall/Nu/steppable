@@ -1,0 +1,30 @@
+let B =
+      https://sellout.github.io/dhall-bhat/package.dhall
+        sha256:67617847fca913d17863ad857224cd9b3904297bb15a9674146d5e120c5ff08a
+
+in  λ(f : Type → Type) →
+    λ(functor : B.Functor.Type f) →
+      let project =
+            λ(t : ./Type f) →
+              t
+                (f (./Type f))
+                ( λ(a : Type) →
+                  λ(tt : { coalgebra : a → f a, seed : a }) →
+                    functor.map
+                      a
+                      (./Type f)
+                      ( λ(x : a) →
+                        λ(r : Type) →
+                        λ ( fn
+                          : ∀(a : Type) → { coalgebra : a → f a, seed : a } → r
+                          ) →
+                          fn a (tt ⫽ { seed = x })
+                      )
+                      (tt.coalgebra tt.seed)
+                )
+
+      in    { embed =
+                ../colambek (./Type f) f functor (./corecursive f).ana project
+            , project
+            }
+          : ../Steppable/Type (./Type f) f

@@ -1,0 +1,15 @@
+let B =
+      https://sellout.github.io/dhall-bhat/package.dhall
+        sha256:67617847fca913d17863ad857224cd9b3904297bb15a9674146d5e120c5ff08a
+
+in  λ(a : Type) →
+    λ(f : Type → Type) →
+    λ(functor : B.Functor.Type f) →
+        { map =
+            λ(b : Type) →
+            λ(c : Type) →
+            λ(g : b → c) →
+            λ(q : ./type a f b) →
+              q ⫽ { lower = functor.map b c g q.lower }
+        }
+      : B.Functor.Type (./type a f)
