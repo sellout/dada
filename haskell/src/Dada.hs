@@ -8,7 +8,7 @@ import qualified Yaya.Fold as Y
 
 -- | This is the key to a Dhall runtime – `Nu` is the one thing that can’t be
 --   normalized away.
-corecursive :: Y.Corecursive t f => D.Type (a -> f a) -> D.Type a -> D.Type t
+corecursive :: (Y.Corecursive t f) => D.Type (a -> f a) -> D.Type a -> D.Type t
 corecursive ψ a =
   D.Type
     ( \case

@@ -1,14 +1,12 @@
-{
-  project:
-    {
-      description:
-        "Recursion schemes provide a total way to support recursion. The \
-         decomposition they encourage also enhances composability and \
-         reusability.",
-      name: "dada",
-      repo: "sellout/dada",
-      summary: "A total recursion scheme library for Dhall",
-      version: "0.1.0",
-    },
-  type: { name: "dhall" },
-}
+project:
+  description: >-
+    Recursion schemes allow you to separate recursion from your business logic –
+    making your own operations simpler, more modular, and less error-prone. This
+    library also provides tools for combining your operations in ways that
+    reduce the number of passes over your data and is designed to encourage
+    total (that is, successfully terminating) functions.
+  name: "dada"
+  repo: "sellout/dada"
+  summary: "A total recursion scheme library for Dhall"
+  version: "0.1.0"
+type: { name: "dhall" }
