@@ -1,0 +1,15 @@
+direnv
+garnix
+[Nn]ix
+Pfeil
+ShellCheck
+bugfix
+comonad
+composability
+conditionalize
+Dhall
+functor
+GADT
+Kleisli
+Kmett
+reusability

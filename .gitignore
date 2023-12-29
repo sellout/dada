@@ -1,5 +1,8 @@
-/.direnv/
-
-# Nix build
 /result
 /source
+dist-newstyle
+/.cache/vale/*
+!/.cache/vale/Vocab/
+/.cache/vale/Vocab/*
+!/.cache/vale/Vocab/dada/
+/.cache/direnv/
