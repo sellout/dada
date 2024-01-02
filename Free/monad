@@ -1,0 +1,16 @@
+    let Monad =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Monad/Type
+    
+in    λ(f : Type → Type)
+    →     { bind =
+                λ(a : Type)
+              → λ(b : Type)
+              → λ(m : ./Type f a)
+              → λ(g : a → ./Type f b)
+              → λ(r : Type)
+              → λ(kp : b → r)
+              → λ(kf : f r → r)
+              → m r (λ(x : a) → g x r kp kf) kf
+          }
+        ∧ ./applicative f
+      : Monad (./Type f)

@@ -1,0 +1,9 @@
+let FreeF = ./../FreeF/Type
+
+in    λ(f : Type → Type)
+    → λ(a : Type)
+    → λ(m : ./../Mu/Type (FreeF f a))
+    → λ(r : Type)
+    → λ(kp : a → r)
+    → λ(kf : f r → r)
+    → m r (λ(free : FreeF f a r) → merge { Pure = kp, Free = kf } free)

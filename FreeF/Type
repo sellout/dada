@@ -1,0 +1,1 @@
+λ(f : Type → Type) → λ(a : Type) → λ(b : Type) → < Pure : a | Free : f b >

@@ -1,0 +1,47 @@
+    let Applicative =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Applicative/Type
+
+in  let Traversable =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Traversable/Type
+
+in  let extractFoldable =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Traversable/extractFoldable
+
+in  let extractFunctor =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Traversable/extractFunctor
+
+in  let sequence =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Traversable/sequence
+
+in    λ(F : Type → Type)
+    → λ(traversable : Traversable F)
+    →     { traverse =
+                λ(G : Type → Type)
+              → λ(applicative : Applicative G)
+              → λ(a : Type)
+              → λ(b : Type)
+              → λ(f : a → G b)
+              → (./recursive F a).cata
+                (G (./Type F b))
+                (   λ(x : ./../FreeF/Type F a (G (./Type F b)))
+                  → merge
+                    { Pure =
+                          λ(x : a)
+                        → applicative.map
+                          b
+                          (./Type F b)
+                          ((./applicative F).pure b)
+                          (f x)
+                    , Free =
+                          λ(x : F (G (./Type F b)))
+                        → applicative.map
+                          (F (./Type F b))
+                          (./Type F b)
+                          (./wrap F b (extractFunctor F traversable))
+                          (sequence F traversable G applicative (./Type F b) x)
+                    }
+                    x
+                )
+          }
+        ∧ ./foldable F (extractFoldable F traversable) ⫽ ./functor F
+      : Traversable (./Type F)

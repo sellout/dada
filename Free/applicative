@@ -1,0 +1,23 @@
+    let Applicative =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Applicative/Type
+    
+in    λ(f : Type → Type)
+    →     { ap =
+                λ(a : Type)
+              → λ(b : Type)
+              → λ(mf : ./Type f (a → b))
+              → λ(mx : ./Type f a)
+              → λ(r : Type)
+              → λ(kp : b → r)
+              → λ(kf : f r → r)
+              → mf r (λ(ff : a → b) → mx r (λ(xx : a) → kp (ff xx)) kf) kf
+          , pure =
+                λ(a : Type)
+              → λ(x : a)
+              → λ(r : Type)
+              → λ(kp : a → r)
+              → λ(kf : f r → r)
+              → kp x
+          }
+        ∧ ./functor f
+      : Applicative (./Type f)

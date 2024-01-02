@@ -1,0 +1,11 @@
+   let Functor =
+         https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Functor/Type
+
+in    λ(f : Type → Type)
+    → λ(functor : Functor f)
+    → λ(a : Type)
+    → λ(x : f a)
+    → λ(r : Type)
+    → λ(kp : a → r)
+    → λ(kf : f r → r)
+    → kf (functor.map a r kp x)

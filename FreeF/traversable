@@ -1,0 +1,40 @@
+    let Applicative =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Applicative/Type
+
+in  let Traversable =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Traversable/Type
+
+in  let extractFoldable =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Traversable/extractFoldable
+
+in  let extractFunctor =
+          https://raw.githubusercontent.com/FormationAI/dhall-bhat/8afbcee6dfd092764df9e9456fe2a2650748dce2/Traversable/extractFunctor
+
+in    λ(F : Type → Type)
+    → λ(traversable : Traversable F)
+    → λ(c : Type)
+    →     { traverse =
+                λ(G : Type → Type)
+              → λ(applicative : Applicative G)
+              → λ(a : Type)
+              → λ(b : Type)
+              → λ(f : a → G b)
+              → λ(ts : ./Type F c a)
+              → let FreeF = ./Type F c b
+
+                in  merge
+                    { Pure =
+                        λ(x : c) → applicative.pure FreeF (FreeF.Pure x)
+                    , Free =
+                          λ(x : F a)
+                        → applicative.map
+                          (F b)
+                          FreeF
+                          FreeF.Free
+                          (traversable.traverse G applicative a b f x)
+                    }
+                    ts
+          }
+        ∧   ./foldable F (extractFoldable F traversable) c
+          ⫽ ./functor F (extractFunctor F traversable) c
+      : Traversable (./Type F c)
