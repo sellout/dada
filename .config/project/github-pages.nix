@@ -46,22 +46,22 @@ in {
             {
               uses = "cachix/install-nix-action@v24";
               "with".extra_nix_config = ''
-              extra-trusted-public-keys = cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
-              extra-substituters = https://cache.garnix.io
-            '';
+                extra-trusted-public-keys = cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
+                extra-substituters = https://cache.garnix.io
+              '';
             }
             {
               uses = "lriesebos/nix-develop-command@v1";
               "with".command = ''
-              dhall-docs \
-                --input ./dhall \
-                --base-import-url "https://sellout.github.io/dada" \
-                --package-name "dada"
-              ## We copy here to fix the permissions from the Nix symlinks
-              cp -r ./docs ./_site
-              chmod --recursive +rwx ./_site
-              cp -r ./dhall/* ./_site/
-            '';
+                dhall-docs \
+                  --input ./dhall \
+                  --base-import-url "https://sellout.github.io/dada" \
+                  --package-name "dada"
+                ## We copy here to fix the permissions from the Nix symlinks
+                cp -r ./docs ./_site
+                chmod --recursive +rwx ./_site
+                cp -r ./dhall/* ./_site/
+              '';
             }
             {
               name = "Upload artifact";
@@ -72,7 +72,7 @@ in {
         deploy = {
           environment = {
             name = "github-pages";
-            url = "$";
+            url = "\${{ steps.deployment.outputs.page_url }}";
           };
           runs-on = "ubuntu-latest";
           needs = "build";

@@ -37,20 +37,23 @@
   ### };
   outputs = {
     bash-strict-mode,
-    concat,
     dhall-bhat,
     flake-utils,
     flaky,
+    flaky-haskell,
     nixpkgs,
     self,
   }: let
     pname = "dada";
 
-    ## TODO: dhall-bhat doesn’t yet support i686-linux.
-    supportedSystems = nixpkgs.lib.remove "i686-linux" flaky.lib.defaultSystems;
+    supportedSystems =
+      nixpkgs.lib.remove
+      ## NB: cborg-0.2.9.0, needed by Dhall, doesn’t compile on i686-linux.
+      flake-utils.lib.system.i686-linux
+      flaky.lib.defaultSystems;
 
     cabalPackages = pkgs: hpkgs:
-      concat.lib.cabalProject2nix
+      flaky-haskell.lib.cabalProject2nix
       ./cabal.project
       pkgs
       hpkgs
@@ -93,46 +96,23 @@
         cabalPackages =
           nixpkgs.lib.composeExtensions
           self.overlays.haskellDependencies
-          (concat.lib.overlayHaskellPackages
+          (flaky-haskell.lib.overlayHaskellPackages
             (self.lib.supportedGhcVersions "")
             self.overlays.haskell);
 
-        haskellDependencies = final: prev: {
-          haskell =
-            prev.haskell
-            // {
-              packages =
-                prev.haskell.packages
-                // (
-                  if prev.system == "aarch64-linux"
-                  then {
-                    ghc942 = prev.haskell.packages.ghc942.extend (hfinal: hprev: {
-                      ## A couple test cases fail on this system/GHC combo.
-                      foundation = prev.haskell.lib.dontCheck hprev.foundation;
-                    });
-                    ghc962 = prev.haskell.packages.ghc962.extend (hfinal: hprev: {
-                      ## The default tls version (1.6.0) doesn’t build on this
-                      ## system/GHC combo.
-                      tls = hprev.tls_1_9_0;
-                    });
-                  }
-                  else {}
-                );
-            };
-        };
+        haskellDependencies = final: prev: {};
 
         dhall = final: prev: dfinal: dprev: {
           ${pname} = self.packages.${final.system}.${pname};
         };
 
-        haskell = concat.lib.haskellOverlay cabalPackages;
+        haskell = flaky-haskell.lib.haskellOverlay cabalPackages;
       };
 
       homeConfigurations =
         builtins.listToAttrs
         (builtins.map
           (flaky.lib.homeConfigurations.example
-            pname
             self
             [
               ({pkgs, ...}: {
@@ -149,39 +129,43 @@
 
       lib = {
         ## TODO: Extract this automatically from `pkgs.haskellPackages`.
-        defaultCompiler = "ghc948";
+        defaultCompiler = "ghc965";
 
         ## Test the oldest revision possible for each minor release. If it’s not
         ## available in nixpkgs, test the oldest available, then try an older
         ## one via GitHub workflow. Additionally, check any revisions that have
         ## explicit conditionalization. And check whatever version `pkgs.ghc`
         ## maps to in the nixpkgs we depend on.
-        testedGhcVersions = system: [
-          self.lib.defaultCompiler
-          "ghc8107"
-          "ghc902"
-          "ghc924"
-          "ghc942"
-          "ghc962"
-          # "ghc981" # included dhall dependency versions fail
-          # "ghcHEAD" # doctest doesn’t work on current HEAD
-        ];
-        ## dependency compiler-rt-libc-7.1.0 is broken in on aarch64-darwin.
-        # TODO: included dependency versions fail
-        # ++ nixpkgs.lib.optional (system != "aarch64-darwin") "ghc884";
+        testedGhcVersions = system:
+          [
+            self.lib.defaultCompiler
+            "ghc8107"
+            "ghc902"
+            "ghc925"
+            "ghc945"
+            "ghc963"
+            "ghc981"
+            "ghc9101"
+            # "ghcHEAD" # doctest doesn’t work on current HEAD
+          ]
+          ## dependency compiler-rt-libc-7.1.0 is broken in on aarch64-darwin.
+          ++ nixpkgs.lib.optional (system != "aarch64-darwin") "ghc884";
 
         ## The versions that are older than those supported by Nix that we
         ## prefer to test against.
         nonNixTestedGhcVersions = [
           ## Dhall 1.34+ doesn’t support GHC before 8.4.
-          # "8.4.1" # dependencies of dhall fail to build
-          # "8.6.1" # dependencies of dhall fail to build
+          "8.4.1"
+          "8.6.1"
           "8.8.1"
           "8.10.1"
           "9.0.1"
           "9.2.1"
           "9.4.1"
           "9.6.1"
+          ## since `cabal-plan-bounds` doesn’t work under Nix
+          "9.8.1"
+          "9.10.1"
         ];
 
         ## However, provide packages in the default overlay for _every_
@@ -203,10 +187,11 @@
           ];
       };
     }
-    // flake-utils.lib.eachSystem supportedSystems
-    (system: let
+    // flake-utils.lib.eachSystem supportedSystems (system: let
       pkgs = import nixpkgs {
         inherit system;
+        ## FIXME: This is for Yaya.
+        config.allowBroken = true;
         overlays = [
           dhall-bhat.overlays.default
           ## NB: This uses `self.overlays.cabalPackages` because packages need
@@ -235,17 +220,19 @@
               document = true;
             });
         }
-        // concat.lib.mkPackages
+        // flaky-haskell.lib.mkPackages
         pkgs
         (self.lib.testedGhcVersions system)
         cabalPackages;
 
-      projectConfigurations =
-        flaky.lib.projectConfigurations.default {inherit pkgs self;};
+      projectConfigurations = flaky.lib.projectConfigurations.default {
+        inherit pkgs self supportedSystems;
+      };
 
       devShells =
         {default = self.devShells.${system}.${self.lib.defaultCompiler};}
-        // concat.lib.mkDevShells
+        // self.projectConfigurations.${system}.devShells
+        // flaky-haskell.lib.mkDevShells
         pkgs
         (
           if system == "aarch64-darwin"
@@ -273,46 +260,21 @@
     });
 
   inputs = {
-    bash-strict-mode = {
-      inputs = {
-        flake-utils.follows = "flake-utils";
-        flaky.follows = "flaky";
-        nixpkgs.follows = "nixpkgs";
-      };
-      url = "github:sellout/bash-strict-mode";
-    };
+    ## Flaky should generally be the source of truth for its inputs.
+    flaky.url = "github:sellout/flaky";
 
-    # Currently contains our Haskell/Nix lib that should be extracted into its
-    # own flake.
-    concat = {
-      inputs = {
-        flake-utils.follows = "flake-utils";
-        nixpkgs.follows = "nixpkgs";
-      };
-      url = "github:compiling-to-categories/concat";
-    };
+    bash-strict-mode.follows = "flaky/bash-strict-mode";
+    flake-utils.follows = "flaky/flake-utils";
+    nixpkgs.follows = "flaky/nixpkgs";
 
     dhall-bhat = {
-      inputs = {
-        ## TODO: The version currently used by dhall-bhat is quite old..
-        bash-strict-mode.follows = "flaky/bash-strict-mode";
-        flaky.follows = "flaky";
-        nixpkgs.follows = "nixpkgs";
-      };
+      inputs.flaky.follows = "flaky";
       url = "github:sellout/dhall-bhat";
     };
 
-    flake-utils.url = "github:numtide/flake-utils";
-
-    flaky = {
-      inputs = {
-        bash-strict-mode.follows = "bash-strict-mode";
-        flake-utils.follows = "flake-utils";
-        nixpkgs.follows = "nixpkgs";
-      };
-      url = "github:sellout/flaky";
+    flaky-haskell = {
+      inputs.flaky.follows = "flaky";
+      url = "github:sellout/flaky-haskell";
     };
-
-    nixpkgs.url = "github:NixOS/nixpkgs/release-23.11";
   };
 }

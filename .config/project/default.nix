@@ -1,4 +1,12 @@
-{config, flaky, lib, pkgs, self, ...}: {
+{
+  config,
+  flaky,
+  lib,
+  pkgs,
+  self,
+  supportedSystems,
+  ...
+}: {
   project = {
     name = "dada";
     summary = "A total recursion scheme library for Dhall";
@@ -38,7 +46,6 @@
 
   ## formatting
   editorconfig.enable = true;
-
   programs = {
     treefmt = {
       enable = true;
@@ -56,6 +63,9 @@
         "*.hs"
         "*.lhs"
         "*/.dir-locals.el"
+        "./.config/emacs/.dir-locals.el"
+        "./.gitattributes"
+        "./.github/settings.yml"
         "./.shellcheckrc"
         "./cabal.project"
         "./dhall/*"
@@ -79,30 +89,29 @@
   ## CI
   services.garnix = {
     enable = true;
-    builds.exclude = [
-      # TODO: Remove once garnix-io/garnix#285 is fixed.
-      "homeConfigurations.x86_64-darwin-${config.project.name}-example"
-    ];
+    ## TODO: Remove once garnix-io/garnix#285 is fixed.
+    builds.exclude = ["homeConfigurations.x86_64-darwin-example"];
   };
   ## FIXME: Shouldn’t need `mkForce` here (or to duplicate the base contexts).
   ##        Need to improve module merging.
   services.github.settings.branches.main.protection.required_status_checks.contexts =
     lib.mkForce
-      (map (ghc: "CI / build (${ghc}) (pull_request)") self.lib.nonNixTestedGhcVersions
-      ++ lib.concatMap flaky.lib.garnixChecks (
+      (flaky.lib.forGarnixSystems supportedSystems (sys:
         lib.concatMap (ghc: [
-          (sys: "devShell ghc${ghc} [${sys}]")
-          (sys: "package ghc${sys}_all [${sys}]")
+          "devShell ${ghc} [${sys}]"
+          "package ${ghc}_all [${sys}]"
         ])
-        (self.lib.testedGhcVersions pkgs.system)
+        (self.lib.testedGhcVersions sys)
         ++ [
-          (sys: "homeConfig ${sys}-${config.project.name}-example")
-          (sys: "package default [${sys}]")
-          (sys: "package ${config.project.name} [${sys}]")
-          ## FIXME: These are duplicated from the base config
-          (sys: "check formatter [${sys}]")
-          (sys: "devShell default [${sys}]")
-        ]));
+      "homeConfig ${sys}-example"
+      "package default [${sys}]"
+      "package ${config.project.name} [${sys}]"
+      ## FIXME: These are duplicated from the base config
+      "check formatter [${sys}]"
+      "check project-manager-files [${sys}]"
+      "check vale [${sys}]"
+      "devShell default [${sys}]"
+    ]));
 
   ## publishing
   programs.git.attributes = ["/dhall/** linguist-language=Dhall"];
