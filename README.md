@@ -10,7 +10,7 @@ Recursion schemes allow you to separate recursion from your business logic – m
 
 ## documentation
 
-API docs are on [GitHub Pages](https://sellout.github.io/dada).
+Dhall API docs are on [GitHub Pages](https://sellout.github.io/dada). See [the package README](./haskell/README.md) for Haskell documentation.
 
 ## development environment
 

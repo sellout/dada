@@ -6,7 +6,9 @@
   self,
   supportedSystems,
   ...
-}: {
+}: let
+  githubSystems = ["macos-13" "ubuntu-22.04" "windows-2022"];
+in {
   project = {
     name = "dada";
     summary = "A total recursion scheme library for Dhall";
@@ -17,12 +19,16 @@
       pkgs.dhall-docs
       pkgs.dhall-lsp-server
       pkgs.graphviz
+      ## So cabal-plan(-bounds) can be built in a devShell, since it doesn’t
+      ## work in Nix proper.
+      pkgs.zlib
     ];
   };
 
   imports = [
-    ./github-ci.nix
+    (import ./github-ci.nix githubSystems [config.project.name])
     ./github-pages.nix
+    ./hackage-publish.nix
     ./hlint.nix
   ];
 
@@ -54,7 +60,10 @@
         ## Haskell formatter
         ormolu.enable = true;
       };
-      settings.formatter.dhall.includes = ["dhall/*"];
+      settings.formatter = {
+        dhall.includes = ["dhall/*"];
+        prettier.excludes = ["*/docs/license-report.md"];
+      };
     };
     vale = {
       enable = true;
@@ -89,29 +98,59 @@
   ## CI
   services.garnix = {
     enable = true;
-    ## TODO: Remove once garnix-io/garnix#285 is fixed.
-    builds.exclude = ["homeConfigurations.x86_64-darwin-example"];
+    builds = {
+      ## TODO: Remove once garnix-io/garnix#285 is fixed.
+      exclude = ["homeConfigurations.x86_64-darwin-example"];
+      include = lib.mkForce (
+        [
+          "homeConfigurations.*"
+          "nixosConfigurations.*"
+        ]
+        ++ flaky.lib.forGarnixSystems supportedSystems (
+          sys:
+            [
+              "checks.${sys}.*"
+              "devShells.${sys}.default"
+              "packages.${sys}.default"
+              "packages.${sys}.${config.project.name}"
+            ]
+            ++ lib.concatMap (ghc: [
+              "devShells.${sys}.${ghc}"
+              "packages.${sys}.${ghc}_all"
+            ])
+            (self.lib.testedGhcVersions sys)
+        )
+      );
+    };
   };
   ## FIXME: Shouldn’t need `mkForce` here (or to duplicate the base contexts).
   ##        Need to improve module merging.
   services.github.settings.branches.main.protection.required_status_checks.contexts =
     lib.mkForce
-      (flaky.lib.forGarnixSystems supportedSystems (sys:
+    (["check-bounds"]
+      ++ lib.concatMap (sys:
+        lib.concatMap (ghc: [
+          "build (${ghc}, ${sys})"
+          "build (--prefer-oldest, ${ghc}, ${sys})"
+        ])
+        self.lib.nonNixTestedGhcVersions)
+      githubSystems
+      ++ flaky.lib.forGarnixSystems supportedSystems (sys:
         lib.concatMap (ghc: [
           "devShell ${ghc} [${sys}]"
           "package ${ghc}_all [${sys}]"
         ])
         (self.lib.testedGhcVersions sys)
         ++ [
-      "homeConfig ${sys}-example"
-      "package default [${sys}]"
-      "package ${config.project.name} [${sys}]"
-      ## FIXME: These are duplicated from the base config
-      "check formatter [${sys}]"
-      "check project-manager-files [${sys}]"
-      "check vale [${sys}]"
-      "devShell default [${sys}]"
-    ]));
+          "homeConfig ${sys}-example"
+          "package default [${sys}]"
+          "package ${config.project.name} [${sys}]"
+          ## FIXME: These are duplicated from the base config
+          "check formatter [${sys}]"
+          "check project-manager-files [${sys}]"
+          "check vale [${sys}]"
+          "devShell default [${sys}]"
+        ]));
 
   ## publishing
   programs.git.attributes = ["/dhall/** linguist-language=Dhall"];

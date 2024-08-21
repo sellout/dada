@@ -23,8 +23,8 @@
   ###
   ### overlays.default – includes all of the packages from cabal.project
   ### packages = {
-  ###   default = points to `packages.dada`
-  ###  dada = the Dhall project
+  ###   default = points to `packages.${defaultGhcVersion}_all`
+  ###   dada = the Dhall project
   ###   <ghcVersion>-<cabal-package> = an individual package compiled for one
   ###                                  GHC version
   ###   <ghcVersion>-all = all of the packages in cabal.project compiled for one
@@ -78,56 +78,56 @@
       overlays = {
         default =
           nixpkgs.lib.composeExtensions
-          (final: prev: {
-            dhallPackages = prev.dhallPackages.override (old: {
-              overrides =
-                final.lib.composeExtensions
-                (old.overrides or (_: _: {}))
-                (self.overlays.dhall final prev);
-            });
-          })
-          self.overlays.cabalPackages;
-
-        # see these issues and discussions:
-        # - NixOS/nixpkgs#16394
-        # - NixOS/nixpkgs#25887
-        # - NixOS/nixpkgs#26561
-        # - https://discourse.nixos.org/t/nix-haskell-development-2020/6170
-        cabalPackages =
-          nixpkgs.lib.composeExtensions
-          self.overlays.haskellDependencies
-          (flaky-haskell.lib.overlayHaskellPackages
-            (self.lib.supportedGhcVersions "")
-            self.overlays.haskell);
-
-        haskellDependencies = final: prev: {};
+          (self.lib.overlayDhallPackages self.overlays.dhall)
+          self.overlays.haskellFull;
 
         dhall = final: prev: dfinal: dprev: {
           ${pname} = self.packages.${final.system}.${pname};
         };
 
-        haskell = flaky-haskell.lib.haskellOverlay cabalPackages;
+        haskell = final: prev:
+          nixpkgs.lib.composeExtensions
+          (self.overlays.haskellDependencies final prev)
+          (flaky-haskell.lib.haskellOverlay cabalPackages final prev);
+
+        ## NB: Dependencies that are overridden because they are broken in
+        ##     Nixpkgs should be pushed upstream to Flaky. This is for
+        ##     dependencies that we override for reasons local to the project.
+        haskellDependencies = final: prev: hfinal: hprev: {};
+
+        ## This takes the `haskell` overlay and bundles it as a “full” overlay.
+        haskellFull = final:
+          flaky-haskell.lib.overlayHaskellPackages
+          (self.lib.supportedGhcVersions final.system)
+          self.overlays.haskell
+          final;
       };
 
       homeConfigurations =
         builtins.listToAttrs
         (builtins.map
-          (flaky.lib.homeConfigurations.example
-            self
-            [
-              ({pkgs, ...}: {
-                home.packages = [
-                  ## TODO: Is there something more like `dhallWithPackages`?
-                  pkgs.dhallPackages.${pname}
-                  (pkgs.haskellPackages.ghcWithPackages (hpkgs: [
-                    hpkgs.${pname}
-                  ]))
-                ];
-              })
-            ])
+          (flaky.lib.homeConfigurations.example self [
+            ({pkgs, ...}: {
+              home.packages = [
+                ## TODO: Is there something more like `dhallWithPackages`?
+                pkgs.dhallPackages.${pname}
+                (pkgs.haskellPackages.ghcWithPackages (hpkgs: [hpkgs.${pname}]))
+              ];
+            })
+          ])
           supportedSystems);
 
       lib = {
+        ## TODO: Move up to Flaky.
+        overlayDhallPackages = dhallOverlay: final: prev: {
+          dhallPackages = prev.dhallPackages.override (old: {
+            overrides =
+              final.lib.composeExtensions
+              (old.overrides or (_: _: {}))
+              (dhallOverlay final prev);
+          });
+        };
+
         ## TODO: Extract this automatically from `pkgs.haskellPackages`.
         defaultCompiler = "ghc965";
 
@@ -194,10 +194,9 @@
         config.allowBroken = true;
         overlays = [
           dhall-bhat.overlays.default
-          ## NB: This uses `self.overlays.cabalPackages` because packages need
-          ##     to be able to find other packages in this flake as
-          ##     dependencies.
-          self.overlays.cabalPackages
+          ## NB: This uses `self.overlays.haskellFull` because packages need to
+          ##     be able to find other packages in this flake as dependencies.
+          self.overlays.haskellFull
         ];
       };
 
@@ -206,7 +205,8 @@
       packages =
         {
           default = self.packages.${system}.${pname};
-
+          defaultHaskell =
+            self.packages.${system}."${self.lib.defaultCompiler}_all";
           "${pname}" =
             bash-strict-mode.lib.checkedDrv
             pkgs
@@ -222,38 +222,30 @@
         }
         // flaky-haskell.lib.mkPackages
         pkgs
-        (self.lib.testedGhcVersions system)
+        (self.lib.supportedGhcVersions system)
         cabalPackages;
-
-      projectConfigurations = flaky.lib.projectConfigurations.default {
-        inherit pkgs self supportedSystems;
-      };
 
       devShells =
         {default = self.devShells.${system}.${self.lib.defaultCompiler};}
         // self.projectConfigurations.${system}.devShells
         // flaky-haskell.lib.mkDevShells
         pkgs
-        (
-          if system == "aarch64-darwin"
-          then
-            nixpkgs.lib.subtractLists
-            ## NB: These devShells don’t work when sandboxed. See
-            ##     NixOS/nix#4119.
-            ## TODO: Just disable the sandbox, don’t omit these devShells.
-            ["ghc902" "ghc924" "ghc942" "ghc962"]
-            (self.lib.testedGhcVersions system)
-          else self.lib.testedGhcVersions system
-        )
+        (self.lib.supportedGhcVersions system)
         cabalPackages
         (hpkgs:
           [self.projectConfigurations.${system}.packages.path]
           ## NB: Haskell Language Server no longer supports GHC <9.
-          ## TODO: HLS also apparently broken on 9.8.1
+          ## TODO: HLS also apparently broken on 9.8.1.
+          ## NB: And there are some 32-bit issues on i686.
           ++ nixpkgs.lib.optional
           (nixpkgs.lib.versionAtLeast hpkgs.ghc.version "9"
-            && builtins.compareVersions hpkgs.ghc.version "9.8.1" != 0)
+            && builtins.compareVersions hpkgs.ghc.version "9.8.1" != 0
+            && system != "i686-linux")
           hpkgs.haskell-language-server);
+
+      projectConfigurations = flaky.lib.projectConfigurations.default {
+        inherit pkgs self supportedSystems;
+      };
 
       checks = self.projectConfigurations.${system}.checks;
       formatter = self.projectConfigurations.${system}.formatter;
