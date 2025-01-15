@@ -55,6 +55,6 @@ test-suite doctests
   main-is: doctests.hs
   build-depends:
     base    >= 4.11.0 && < 4.20,
-    doctest >= 0.15.0 && < 0.23,
+    doctest >=0.15.0 && <0.24,
     dada
   default-language:    Haskell2010
