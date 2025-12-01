@@ -27,18 +27,19 @@
       // copyLicenses "haskell";
   };
 
-  programs.vale.vocab.${config.project.name}.accept = [
-    "bugfix"
-    "comonad"
-    "composability"
-    "conditionalize"
-    "Dhall"
-    "functor"
-    "GADT"
-    "Kleisli"
-    "Kmett"
-    "reusability"
-  ];
+  programs.vale = {
+    excludes = [
+      "*/LICENSE*"
+    ];
+    vocab.${config.project.name}.accept = [
+      "APIs"
+      "bugfixes"
+      "composability"
+      "pragmas"
+      "reusability"
+      "widenings"
+    ];
+  };
 
   ## CI
   ## FIXME: Shouldn’t need `mkForce` here (or to duplicate the base contexts).
