@@ -42,7 +42,8 @@ corecursive ψ a =
             <*> lookupField a "seed" fields
         _ -> D.extractError "Could not decode a non-record value as `Nu`"
     )
-    ( D.Record . D.Map.fromList
+    ( D.Record
+        . D.Map.fromList
         <$> sequenceA
           [ ("coalgebra",) . D.makeRecordField <$> D.expected ψ,
             ("seed",) . D.makeRecordField <$> D.expected a

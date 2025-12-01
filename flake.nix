@@ -2,29 +2,36 @@
   description = "A total recursion scheme library for Dhall";
 
   nixConfig = {
+    ## NB: This is a consequence both of the prevailing Haskell infrastructure
+    ##     and of using `self.pkgsLib.runEmptyCommand`, which allows us to
+    ##     sandbox derivations that otherwise can’t be. Even once we migrate to
+    ##     non-IFD Haskell infra, this will probably still need to be enabled
+    ##     for the other reason.
+    allow-import-from-derivation = true;
     ## https://github.com/NixOS/rfcs/blob/master/rfcs/0045-deprecate-url-syntax.md
     extra-experimental-features = ["no-url-literals"];
     extra-substituters = [
       "https://cache.dhall-lang.org"
       "https://cache.garnix.io"
       "https://dhall.cachix.org"
+      "https://sellout.cachix.org"
     ];
     extra-trusted-public-keys = [
       "cache.dhall-lang.org:I9/H18WHd60olG5GsIjolp7CtepSgJmM2CsO813VTmM="
       "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
       "dhall.cachix.org-1:8laGciue2JBwD49ICFtg+cIF8ddDaW7OFBjDb/dHEAo="
+      "sellout.cachix.org-1:v37cTpWBEycnYxSPAgSQ57Wiqd3wjljni2aC0Xry1DE="
     ];
     ## Isolate the build.
-    registries = false;
     sandbox = "relaxed";
+    use-registries = false;
   };
 
   ### This is a complicated flake. Here’s the rundown:
   ###
   ### overlays.default – includes all of the packages from cabal.project
   ### packages = {
-  ###   default = points to `packages.dada`
-  ###  dada = the Dhall project
+  ###   default = points to `packages.${defaultGhcVersion}`
   ###   <ghcVersion>-<cabal-package> = an individual package compiled for one
   ###                                  GHC version
   ###   <ghcVersion>-all = all of the packages in cabal.project compiled for one
@@ -35,22 +42,22 @@
   ###   <ghcVersion> = a shell providing all of the dependencies for all
   ###                  packages in cabal.project compiled for one GHC version
   ### };
+  ### checks.format = verify that code matches Ormolu expectations
   outputs = {
-    bash-strict-mode,
-    concat,
     dhall-bhat,
     flake-utils,
     flaky,
+    flaky-haskell,
     nixpkgs,
     self,
+    systems,
   }: let
     pname = "dada";
 
-    ## TODO: dhall-bhat doesn’t yet support i686-linux.
-    supportedSystems = nixpkgs.lib.remove "i686-linux" flaky.lib.defaultSystems;
+    supportedSystems = import systems;
 
     cabalPackages = pkgs: hpkgs:
-      concat.lib.cabalProject2nix
+      flaky-haskell.lib.cabalProject2nix
       ./cabal.project
       pkgs
       hpkgs
@@ -72,84 +79,70 @@
           ;
       };
 
+      # see these issues and discussions:
+      # - NixOS/nixpkgs#16394
+      # - NixOS/nixpkgs#25887
+      # - NixOS/nixpkgs#26561
+      # - https://discourse.nixos.org/t/nix-haskell-development-2020/6170
       overlays = {
-        default =
-          nixpkgs.lib.composeExtensions
-          (final: prev: {
-            dhallPackages = prev.dhallPackages.override (old: {
-              overrides =
-                final.lib.composeExtensions
-                (old.overrides or (_: _: {}))
-                (self.overlays.dhall final prev);
-            });
-          })
-          self.overlays.cabalPackages;
-
-        # see these issues and discussions:
-        # - NixOS/nixpkgs#16394
-        # - NixOS/nixpkgs#25887
-        # - NixOS/nixpkgs#26561
-        # - https://discourse.nixos.org/t/nix-haskell-development-2020/6170
-        cabalPackages =
-          nixpkgs.lib.composeExtensions
-          self.overlays.haskellDependencies
-          (concat.lib.overlayHaskellPackages
-            (self.lib.supportedGhcVersions "")
-            self.overlays.haskell);
-
-        haskellDependencies = final: prev: {
-          haskell =
-            prev.haskell
-            // {
-              packages =
-                prev.haskell.packages
-                // (
-                  if prev.system == "aarch64-linux"
-                  then {
-                    ghc942 = prev.haskell.packages.ghc942.extend (hfinal: hprev: {
-                      ## A couple test cases fail on this system/GHC combo.
-                      foundation = prev.haskell.lib.dontCheck hprev.foundation;
-                    });
-                    ghc962 = prev.haskell.packages.ghc962.extend (hfinal: hprev: {
-                      ## The default tls version (1.6.0) doesn’t build on this
-                      ## system/GHC combo.
-                      tls = hprev.tls_1_9_0;
-                    });
-                  }
-                  else {}
-                );
-            };
-        };
+        default = final:
+          nixpkgs.lib.composeManyExtensions [
+            flaky.overlays.default
+            (final: prev: {
+              dhallPackages = prev.dhallPackages.override (old: {
+                overrides =
+                  final.lib.composeExtensions
+                  (old.overrides or (_: _: {}))
+                  (self.overlays.dhall final prev);
+              });
+            })
+            (flaky-haskell.lib.overlayHaskellPackages
+              (map self.lib.nixifyGhcVersion
+                (self.lib.supportedGhcVersions final.system))
+              (final: prev:
+                nixpkgs.lib.composeManyExtensions [
+                  ## TODO: I think this overlay is only needed by formatters,
+                  ##       devShells, etc., so it shouldn’t be included in the
+                  ##       standard overlay.
+                  (flaky.overlays.haskellDependencies final prev)
+                  (self.overlays.haskell final prev)
+                  (self.overlays.haskellDependencies final prev)
+                ]))
+          ]
+          final;
 
         dhall = final: prev: dfinal: dprev: {
           ${pname} = self.packages.${final.system}.${pname};
         };
 
-        haskell = concat.lib.haskellOverlay cabalPackages;
+        haskell = flaky-haskell.lib.haskellOverlay cabalPackages;
+
+        ## NB: Dependencies that are overridden because they are broken in
+        ##     Nixpkgs should be pushed upstream to Flaky. This is for
+        ##     dependencies that we override for reasons local to the project.
+        haskellDependencies = final: prev: hfinal: hprev: {};
       };
 
       homeConfigurations =
         builtins.listToAttrs
         (builtins.map
-          (flaky.lib.homeConfigurations.example
-            pname
-            self
-            [
-              ({pkgs, ...}: {
-                home.packages = [
-                  ## TODO: Is there something more like `dhallWithPackages`?
-                  pkgs.dhallPackages.${pname}
-                  (pkgs.haskellPackages.ghcWithPackages (hpkgs: [
-                    hpkgs.${pname}
-                  ]))
-                ];
-              })
-            ])
+          (flaky.lib.homeConfigurations.example self [
+            ({pkgs, ...}: {
+              home.packages = [
+                ## TODO: Is there something more like `dhallWithPackages`?
+                pkgs.dhallPackages.${pname}
+                (pkgs.haskellPackages.ghcWithPackages (hpkgs: [hpkgs.${pname}]))
+              ];
+            })
+          ])
           supportedSystems);
 
       lib = {
+        nixifyGhcVersion = version:
+          "ghc" + nixpkgs.lib.replaceStrings ["."] [""] version;
+
         ## TODO: Extract this automatically from `pkgs.haskellPackages`.
-        defaultCompiler = "ghc948";
+        defaultGhcVersion = "9.8.4";
 
         ## Test the oldest revision possible for each minor release. If it’s not
         ## available in nixpkgs, test the oldest available, then try an older
@@ -157,18 +150,17 @@
         ## explicit conditionalization. And check whatever version `pkgs.ghc`
         ## maps to in the nixpkgs we depend on.
         testedGhcVersions = system: [
-          self.lib.defaultCompiler
-          "ghc8107"
-          "ghc902"
-          "ghc924"
-          "ghc942"
-          "ghc962"
-          # "ghc981" # included dhall dependency versions fail
+          self.lib.defaultGhcVersion
+          "8.10.7"
+          "9.0.2"
+          "9.2.8"
+          "9.4.7"
+          "9.6.3"
+          # "9.8.1" # included dhall dependency versions fail
+          "9.10.1"
+          "9.12.1"
           # "ghcHEAD" # doctest doesn’t work on current HEAD
         ];
-        ## dependency compiler-rt-libc-7.1.0 is broken in on aarch64-darwin.
-        # TODO: included dependency versions fail
-        # ++ nixpkgs.lib.optional (system != "aarch64-darwin") "ghc884";
 
         ## The versions that are older than those supported by Nix that we
         ## prefer to test against.
@@ -182,6 +174,10 @@
           "9.2.1"
           "9.4.1"
           "9.6.1"
+          ## since `cabal-plan-bounds` doesn’t work under Nix
+          "9.8.1"
+          "9.10.1"
+          "9.12.1"
         ];
 
         ## However, provide packages in the default overlay for _every_
@@ -189,32 +185,22 @@
         supportedGhcVersions = system:
           self.lib.testedGhcVersions system
           ++ [
-            "ghc925"
-            "ghc926"
-            "ghc927"
-            "ghc928"
-            "ghc943"
-            "ghc944"
-            "ghc945"
-            "ghc946"
-            "ghc947"
-            "ghc948"
-            "ghc963"
+            "9.4.8"
+            "9.6.4"
+            "9.6.5"
+            "9.8.2"
+            "9.10.2"
+            "9.12.2"
           ];
       };
     }
-    // flake-utils.lib.eachSystem supportedSystems
-    (system: let
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = [
-          dhall-bhat.overlays.default
-          ## NB: This uses `self.overlays.cabalPackages` because packages need
-          ##     to be able to find other packages in this flake as
-          ##     dependencies.
-          self.overlays.cabalPackages
-        ];
-      };
+    // flake-utils.lib.eachSystem supportedSystems (system: let
+      pkgs = nixpkgs.legacyPackages.${system}.appendOverlays [
+        dhall-bhat.overlays.default
+        ## NB: This uses `self.overlays.default` because packages need to be
+        ##     able to find other packages in this flake as dependencies.
+        self.overlays.default
+      ];
 
       src = nixpkgs.lib.cleanSource ./.;
     in {
@@ -222,97 +208,60 @@
         {
           default = self.packages.${system}.${pname};
 
-          "${pname}" =
-            bash-strict-mode.lib.checkedDrv
-            pkgs
-            (pkgs.dhallPackages.buildDhallDirectoryPackage {
-              src = "${src}/dhall";
-              name = pname;
-              dependencies = [
-                pkgs.dhallPackages.Prelude
-                pkgs.dhallPackages.dhall-bhat
-              ];
-              document = true;
-            });
+          "${pname}" = pkgs.checkedDrv (pkgs.dhallPackages.buildDhallDirectoryPackage {
+            src = "${src}/dhall";
+            name = pname;
+            dependencies = [
+              pkgs.dhallPackages.Prelude
+              pkgs.dhallPackages.dhall-bhat
+            ];
+            document = true;
+          });
         }
-        // concat.lib.mkPackages
+        // flaky-haskell.lib.mkPackages
         pkgs
-        (self.lib.testedGhcVersions system)
+        (map self.lib.nixifyGhcVersion (self.lib.supportedGhcVersions system))
         cabalPackages;
 
-      projectConfigurations =
-        flaky.lib.projectConfigurations.default {inherit pkgs self;};
-
       devShells =
-        {default = self.devShells.${system}.${self.lib.defaultCompiler};}
-        // concat.lib.mkDevShells
+        self.projectConfigurations.${system}.devShells
+        // {default = flaky.lib.devShells.default system self [] "";}
+        // flaky-haskell.lib.mkDevShells
         pkgs
-        (
-          if system == "aarch64-darwin"
-          then
-            nixpkgs.lib.subtractLists
-            ## NB: These devShells don’t work when sandboxed. See
-            ##     NixOS/nix#4119.
-            ## TODO: Just disable the sandbox, don’t omit these devShells.
-            ["ghc902" "ghc924" "ghc942" "ghc962"]
-            (self.lib.testedGhcVersions system)
-          else self.lib.testedGhcVersions system
-        )
+        (map self.lib.nixifyGhcVersion (self.lib.supportedGhcVersions system))
         cabalPackages
         (hpkgs:
           [self.projectConfigurations.${system}.packages.path]
-          ## NB: Haskell Language Server no longer supports GHC <9.
-          ## TODO: HLS also apparently broken on 9.8.1
+          ## NB: Haskell Language Server no longer supports GHC <9.4.
           ++ nixpkgs.lib.optional
-          (nixpkgs.lib.versionAtLeast hpkgs.ghc.version "9"
-            && builtins.compareVersions hpkgs.ghc.version "9.8.1" != 0)
+          (nixpkgs.lib.versionAtLeast hpkgs.ghc.version "9.4")
           hpkgs.haskell-language-server);
+
+      projectConfigurations = flaky.lib.projectConfigurations.dhall {
+        inherit pkgs self;
+        modules = [flaky.projectModules.haskell];
+      };
 
       checks = self.projectConfigurations.${system}.checks;
       formatter = self.projectConfigurations.${system}.formatter;
     });
 
   inputs = {
-    bash-strict-mode = {
-      inputs = {
-        flake-utils.follows = "flake-utils";
-        flaky.follows = "flaky";
-        nixpkgs.follows = "nixpkgs";
-      };
-      url = "github:sellout/bash-strict-mode";
-    };
+    ## Flaky should generally be the source of truth for its inputs.
+    flaky.url = "github:sellout/flaky";
 
-    # Currently contains our Haskell/Nix lib that should be extracted into its
-    # own flake.
-    concat = {
-      inputs = {
-        flake-utils.follows = "flake-utils";
-        nixpkgs.follows = "nixpkgs";
-      };
-      url = "github:compiling-to-categories/concat";
-    };
+    flake-utils.follows = "flaky/flake-utils";
+    nixpkgs.follows = "flaky/nixpkgs";
+    systems.follows = "flaky/systems";
 
     dhall-bhat = {
-      inputs = {
-        ## TODO: The version currently used by dhall-bhat is quite old..
-        bash-strict-mode.follows = "flaky/bash-strict-mode";
-        flaky.follows = "flaky";
-        nixpkgs.follows = "nixpkgs";
-      };
+      inputs.flaky.follows = "flaky";
       url = "github:sellout/dhall-bhat";
     };
 
-    flake-utils.url = "github:numtide/flake-utils";
-
-    flaky = {
-      inputs = {
-        bash-strict-mode.follows = "bash-strict-mode";
-        flake-utils.follows = "flake-utils";
-        nixpkgs.follows = "nixpkgs";
-      };
-      url = "github:sellout/flaky";
+    flaky-haskell = {
+      inputs.flaky.follows = "flaky";
+      url = "github:sellout/flaky-haskell";
     };
-
-    nixpkgs.url = "github:NixOS/nixpkgs/release-23.11";
   };
 }

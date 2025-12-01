@@ -1,8 +1,8 @@
-# dada
+# Dada
 
-[![built with garnix](https://img.shields.io/endpoint?url=https%3A%2F%2Fgarnix.io%2Fapi%2Fbadges%2Fsellout%2Fdada)](https://garnix.io)
-[![Packaging status](https://repology.org/badge/tiny-repos/haskell:dada.svg)](https://repology.org/project/haskell:dada/versions)
-[![latest packaged version(s)](https://repology.org/badge/latest-versions/haskell:dada.svg)](https://repology.org/project/haskell:dada/versions)
+[![built with garnix](https://img.shields.io/endpoint?url=https%3A%2F%2Fgarnix.io%2Fapi%2Fbadges%2Fsellout%2Fdada)](https://garnix.io/repo/sellout/dada)
+[![Nix CI](https://nix-ci.com/badge/gh:sellout:dada)](https://nix-ci.com/gh:sellout:dada)
+[![Project Manager](https://img.shields.io/badge/%20-Project%20Manager-%235277C3?logo=nixos&labelColor=%23cccccc)](https://sellout.github.io/project-manager/)
 
 A total recursion scheme library for Dhall
 

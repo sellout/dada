@@ -2,7 +2,14 @@
 /source
 dist-newstyle
 /.cache/vale/*
+!/.cache/vale/config/
+/.cache/vale/config/*
+!/.cache/vale/config/vocabularies/
+/.cache/vale/config/vocabularies/*
+!/.cache/vale/config/vocabularies/dada/
 !/.cache/vale/Vocab/
 /.cache/vale/Vocab/*
 !/.cache/vale/Vocab/dada/
+/.local/state/project-manager/
+/.local/state/nix/profiles/
 /.cache/direnv/
