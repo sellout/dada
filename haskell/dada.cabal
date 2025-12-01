@@ -35,8 +35,8 @@ tested-with:
     9.4.1, 9.4.7,
     9.6.1, 9.6.3,
     9.8.1, 9.8.4,
-    9.10.1,
-    9.12.1
+    9.10.1
+    -- 9.12.1 # Yaya doesn’t yet support GHC 9.12
   }
 
 homepage: https://github.com/sellout/dada#readme
@@ -65,7 +65,7 @@ custom-setup
     --       have _some_ upper bound. (Since there’s no direct dependency, it
     --       doesn’t use PVP bounds.)
     Cabal >= 3.0 && < 99,
-    base,
+    base ^>= {4.18.0, 4.19.0, 4.20.0},
     cabal-doctest ^>= {1.0.0},
 
 -- This mimics the GHC2024 extension
@@ -121,7 +121,7 @@ common GHC2024
 common defaults
   import: GHC2024
   build-depends:
-    base,
+    base ^>= {4.18.0, 4.19.0, 4.20.0},
   ghc-options:
   if impl(ghc >= 8.0.1)
     ghc-options:
@@ -186,9 +186,9 @@ library
   hs-source-dirs:
     src
   build-depends:
-    dhall,
-    either,
-    yaya,
+    dhall ^>= {1.42.1},
+    either ^>= {5.0.2},
+    yaya ^>= {0.6.2},
   exposed-modules:
     Dada
 
@@ -198,7 +198,7 @@ test-suite doctests
   hs-source-dirs: tests
   main-is: doctests.hs
   build-depends:
-    doctest,
+    doctest ^>= {0.21.1, 0.22.2, 0.24.0},
     dada,
   if impl(ghc >= 8.10.1)
     ghc-options:

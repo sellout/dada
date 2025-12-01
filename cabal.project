@@ -9,6 +9,16 @@ program-options
   ghc-options:
     -Werror
 
+constraints:
+  -- Versions before this are missing dependency bounds
+  pretty-simple >= 1.0.0.5,
+  -- Versions before this use `-fpackage-trust`, which is a pain
+  yaya >= 0.6.2.2,
+if arch(aarch64)
+   constraints:
+     -- Earlier versions fail to compile on aarch64
+     cborg >= 0.2.9.0
+
 tests: True
 
 packages:

@@ -122,6 +122,7 @@
         ##     dependencies that we override for reasons local to the project.
         haskellDependencies = final: prev: hfinal: hprev: {
           network = final.haskell.lib.dontCheck hprev.network;
+          repline = final.haskell.lib.doJailbreak hprev.repline;
           warp = final.haskell.lib.dontCheck hprev.warp;
         };
       };
@@ -154,33 +155,21 @@
         ## maps to in the nixpkgs we depend on.
         testedGhcVersions = system: [
           self.lib.defaultGhcVersion
-          "8.10.7"
-          "9.0.2"
-          "9.2.8"
-          "9.4.7"
           "9.6.3"
-          # "9.8.1" # included dhall dependency versions fail
+          "9.8.1"
           "9.10.1"
-          "9.12.1"
+          # "9.12.1" # Yaya doesn’t yet support GHC 9.12
           # "ghcHEAD" # doctest doesn’t work on current HEAD
         ];
 
         ## The versions that are older than those supported by Nix that we
         ## prefer to test against.
         nonNixTestedGhcVersions = [
-          ## Dhall 1.34+ doesn’t support GHC before 8.4.
-          # "8.4.1" # dependencies of dhall fail to build
-          # "8.6.1" # dependencies of dhall fail to build
-          "8.8.1"
-          "8.10.1"
-          "9.0.1"
-          "9.2.1"
-          "9.4.1"
           "9.6.1"
           ## since `cabal-plan-bounds` doesn’t work under Nix
           "9.8.1"
           "9.10.1"
-          "9.12.1"
+          # "9.12.1" # Yaya doesn’t yet support GHC 9.12
         ];
 
         ## However, provide packages in the default overlay for _every_
@@ -188,10 +177,10 @@
         supportedGhcVersions = system:
           self.lib.testedGhcVersions system
           ++ [
-            "9.4.8"
             "9.6.4"
             "9.6.5"
             "9.8.2"
+            "9.8.3"
             "9.10.2"
             "9.12.2"
           ];
@@ -251,11 +240,13 @@
 
   inputs = {
     ## Flaky should generally be the source of truth for its inputs.
-    flaky.url = "github:sellout/flaky";
+    flaky = {
+      inputs.systems.follows = "systems";
+      url = "github:sellout/flaky";
+    };
 
     flake-utils.follows = "flaky/flake-utils";
     nixpkgs.follows = "flaky/nixpkgs";
-    systems.follows = "flaky/systems";
 
     dhall-bhat = {
       inputs.flaky.follows = "flaky";
@@ -266,5 +257,8 @@
       inputs.flaky.follows = "flaky";
       url = "github:sellout/flaky-haskell";
     };
+
+    ## This doesn’t follow Flaky because Dada doesn’t support i686.
+    systems.url = "github:nix-systems/default";
   };
 }
