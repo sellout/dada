@@ -1,19 +1,30 @@
-{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE Trustworthy #-}
 {-# LANGUAGE TypeApplications #-}
 
-module Dada where
+module Dada
+  ( corecursive,
+    corecursiveAutoWith,
+  )
+where
 
-import Control.Arrow (Arrow ((&&&)))
-import Data.Either.Validation (Validation)
-import Data.Proxy (Proxy (Proxy))
-import Data.Void (Void)
-import qualified Dhall as D
-import qualified Dhall.Core as D
-import qualified Dhall.Map as D.Map
-import qualified Dhall.Src as D
-import qualified Yaya.Fold as Y
+import safe "base" Control.Applicative ((<*>))
+import safe "base" Control.Arrow ((&&&))
+import safe "base" Control.Category ((.))
+import safe "base" Data.Function (($))
+import safe "base" Data.Functor ((<$>))
+import safe "base" Data.Maybe (maybe)
+import safe "base" Data.Proxy (Proxy (Proxy))
+import safe "base" Data.Semigroup ((<>))
+import safe "base" Data.Traversable (sequenceA)
+import safe "base" Data.Tuple (uncurry)
+import safe "base" Data.Void (Void)
+import qualified "dhall" Dhall as D
+import qualified "dhall" Dhall.Core as D
+import qualified "dhall" Dhall.Map as D.Map
+import qualified "dhall" Dhall.Src as D
+import safe "either" Data.Either.Validation (Validation)
+import safe qualified "yaya" Yaya.Fold as Y
 
 lookupField ::
   D.Decoder a ->
@@ -50,9 +61,9 @@ corecursive ψ a =
           ]
     )
 
---- | An implementation of `autoWith` for any `Y.Corecursive` type.
+-- | An implementation of `autoWith` for any `Y.Corecursive` type.
 --
---   TODO: Add `D.FromDhall` instances for various types included with Yaya.
+--  __TODO__: Add `D.FromDhall` instances for various types included with Yaya.
 corecursiveAutoWith ::
   forall t f a.
   (Y.Corecursive (->) t f, D.FromDhall a, D.ToDhall a, D.FromDhall (f a)) =>
