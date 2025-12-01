@@ -120,7 +120,10 @@
         ## NB: Dependencies that are overridden because they are broken in
         ##     Nixpkgs should be pushed upstream to Flaky. This is for
         ##     dependencies that we override for reasons local to the project.
-        haskellDependencies = final: prev: hfinal: hprev: {};
+        haskellDependencies = final: prev: hfinal: hprev: {
+          network = final.haskell.lib.dontCheck hprev.network;
+          warp = final.haskell.lib.dontCheck hprev.warp;
+        };
       };
 
       homeConfigurations =
