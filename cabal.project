@@ -1,5 +1,23 @@
+-- Tune the solver to improve the odds of finding a solution. This is useful for
+-- initializing and updating dependency bounds, but shouldn’t have an impact on
+-- regular usage, because the explicit bounds reduce the search space.
+max-backjumps: -1
+minimize-conflict-set: true
+reorder-goals: true
+
 program-options
-  ghc-options: -Werror
+  ghc-options:
+    -Werror
+
+constraints:
+  -- Versions before this are missing dependency bounds
+  pretty-simple >= 1.0.0.5,
+  -- Versions before this use `-fpackage-trust`, which is a pain
+  yaya >= 0.6.2.2,
+if arch(aarch64)
+   constraints:
+     -- Earlier versions fail to compile on aarch64
+     cborg >= 0.2.9.0
 
 tests: True
 

@@ -8,5 +8,4 @@ project:
   name: "dada"
   repo: "sellout/dada"
   summary: "A total recursion scheme library for Dhall"
-  version: "0.1.0"
 type: { name: "dhall" }

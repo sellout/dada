@@ -1,4 +1,8 @@
-{lib, self, ...}: {
+{
+  lib,
+  self,
+  ...
+}: {
   services.github.workflow."build.yml".text = lib.generators.toYAML {} {
     name = "CI";
     on = {
